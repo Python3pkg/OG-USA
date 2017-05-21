@@ -40,7 +40,7 @@ def search_worksheet(sheet, search_term, distance, warnings = True):
     final_search = ((distance+1)*distance)/2
     current_diagonal = 1
     total_columns  = sheet.ncols
-    for n in xrange(0, final_search):
+    for n in range(0, final_search):
         if ((current_diagonal+1)*current_diagonal)/2 < n+1:
             current_diagonal += 1
         
@@ -54,8 +54,8 @@ def search_worksheet(sheet, search_term, distance, warnings = True):
             return [i,j]
     
     if warnings:
-        print "Warning: No such search entry found in the specified search space."
-        print "Check sample worksheet and consider changing distance input."
+        print("Warning: No such search entry found in the specified search space.")
+        print("Check sample worksheet and consider changing distance input.")
     
     return [-1,-1]
         

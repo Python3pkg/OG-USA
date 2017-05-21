@@ -145,7 +145,7 @@ def get_cbepath(params, Gamma1, r_path, w_path, p_c_path, p_tilde_path,
                                 p_c_path[:,0], p_tilde_path[0],n[S-1],Gamma1[S-2])
     c_path[S-1, 0, :], c_cstr = firm.get_c(alpha[:,0],c_bar[:,0],c_tilde_path[S-1,0],
                                      p_c_path[:,0],p_tilde_path[0])
-    for u in xrange(2, S):
+    for u in range(2, S):
         # b_guess = b_ss[-u+1:]
         b_guess = np.diagonal(b_path[S-u:, :u-1])
         pl_params = (S, alpha[:,:u], beta, sigma, tp_tol)
@@ -172,7 +172,7 @@ def get_cbepath(params, Gamma1, r_path, w_path, p_c_path, p_tilde_path,
     DiagMaskc = np.eye(S, dtype=bool)
     DiagMaskc_tiled = np.tile(np.expand_dims(np.eye(S, dtype=bool),axis=2),(1,1,I))
 
-    for t in xrange(1, T+1): # Go from periods 1 to T
+    for t in range(1, T+1): # Go from periods 1 to T
         # b_guess = b_ss
         b_guess = np.diagonal(b_path[:, t-1:t+S-2])
         pl_params = (S, alpha[:,t-1:t+S-1], beta, sigma, tp_tol)
@@ -856,7 +856,7 @@ def TP_fsolve(guesses, params, K_ss, X_ss, Gamma1, c_bar, A,
         X_inv_path[:,t] = np.dot(Inv_path[:,t],xi)
         X_c_path[:,t] = np.dot(np.reshape(C_path[:,t],(1,I)),pi)
     RCdiff_path = (X_path - X_c_path - X_inv_path) 
-    print 'the max RC diff is: ', np.absolute(RCdiff_path).max(axis=1)
+    print('the max RC diff is: ', np.absolute(RCdiff_path).max(axis=1))
 
     # Check and punish constraing violations
     mask1 = r_path[:T] <= 0
@@ -869,10 +869,10 @@ def TP_fsolve(guesses, params, K_ss, X_ss, Gamma1, c_bar, A,
     L_market_error[mask4] += 1e14
 
 
-    print 'max capital market clearing distance: ', np.absolute(K_market_error).max()
-    print 'max labor market clearing distance: ', np.absolute(L_market_error).max()
-    print 'min capital market clearing distance: ', np.absolute(K_market_error).min()
-    print 'min labor market clearing distance: ', np.absolute(L_market_error).min()
+    print('max capital market clearing distance: ', np.absolute(K_market_error).max())
+    print('max labor market clearing distance: ', np.absolute(L_market_error).max())
+    print('min capital market clearing distance: ', np.absolute(K_market_error).min())
+    print('min labor market clearing distance: ', np.absolute(L_market_error).min())
 
     errors = np.append(K_market_error, L_market_error)
 

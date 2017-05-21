@@ -90,7 +90,7 @@ def graph_income(S, J, e, starting_age, ending_age, bin_weights,
 
     domain = np.linspace(starting_age, ending_age, S)
     Jgrid = np.zeros(J)
-    for j in xrange(J):
+    for j in range(J):
         Jgrid[j:] += bin_weights[j]
     X, Y = np.meshgrid(domain, Jgrid)
     cmap2 = matplotlib.cm.get_cmap('winter')
@@ -227,7 +227,7 @@ def get_e(S, J, starting_age, ending_age, bin_weights, omega_SS, flag_graphs):
                              [70.5229181668, 0.0701993896947, -6.37746859905],
                              [35, .06, -5],
                              [35, .06, -5]])
-    for j in xrange(J):
+    for j in range(J):
         e_final[60:, j] = arc_tan_fit(e_final[59, j], one[j], two[j], three[
                                       j], ability_depreciation[j], init_guesses[j])
     if flag_graphs:

@@ -18,7 +18,7 @@ import numpy as np
 import scipy.optimize as opt
 import scipy.interpolate as si
 import pandas as pd
-import utils
+from . import utils
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
@@ -138,7 +138,7 @@ def get_fert(totpers, min_yr, max_yr, graph=False):
     fert_rates_sub[pred_ind] = np.float64(fert_func(age_pred))
     fert_rates = np.zeros(totpers)
     end_sub_bin = 0
-    for i in xrange(totpers):
+    for i in range(totpers):
         beg_sub_bin = int(end_sub_bin)
         end_sub_bin = int(np.rint((i + 1) * len_subbins))
         fert_rates[i] = ((curr_pop_sub[beg_sub_bin:end_sub_bin] *
@@ -285,12 +285,12 @@ def get_mort(totpers, min_yr, max_yr, graph=False):
     len_subbins = ((np.float64((max_yr - min_yr + 1) * num_sub_bins)) /
                   totpers)
     mort_rates_sub = np.zeros(num_sub_bins * max_yr, dtype=np.float64)
-    for i in xrange(max_yr):
+    for i in range(max_yr):
         mort_rates_sub[i*num_sub_bins:(i+1)*num_sub_bins] = (1 -
             ((1 - np.float64(mort_rates_mxyr[i])) ** (1 / num_sub_bins)))
     mort_rates = np.zeros(totpers)
     end_sub_bin = 0
-    for i in xrange(totpers):
+    for i in range(totpers):
         beg_sub_bin = int(end_sub_bin)
         end_sub_bin = int(np.rint((i + 1) * len_subbins))
         mort_rates[i] = (1 - (1 -
@@ -389,7 +389,7 @@ def pop_rebin(curr_pop_dist, totpers_new):
                       totpers_new)
         curr_pop_new = np.zeros(totpers_new, dtype=np.float64)
         end_sub_bin = 0
-        for i in xrange(totpers_new):
+        for i in range(totpers_new):
             beg_sub_bin = int(end_sub_bin)
             end_sub_bin = int(np.rint((i + 1) * len_subbins))
             curr_pop_new[i] = \
@@ -734,7 +734,7 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=True):
     # Age most recent population data to the current year of analysis
     pop_curr = pop_2013_EpS.copy()
     data_year = 2013
-    for per in xrange(0, curr_year-data_year): # Age the data to
+    for per in range(0, curr_year-data_year): # Age the data to
                                                # the current year
         pop_next = np.dot(OMEGA_orig, pop_curr)
         g_n_curr = ((pop_next[-S:].sum() - pop_curr[-S:].sum())/
@@ -746,7 +746,7 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=True):
 
     # Generate time path of the population distribution
     omega_path_lev[:,0] = pop_curr.copy()
-    for per in xrange(1, T+S):
+    for per in range(1, T+S):
         pop_next = np.dot(OMEGA_orig, pop_curr)
         omega_path_lev[:, per] = pop_next.copy()
         pop_curr = pop_next.copy()
@@ -807,29 +807,29 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=True):
                         (omega_path_lev[:,T] /
                         omega_path_lev[:,T].sum())).max()
         if omegaSSmaxdif > 0.0003:
-            print("POP. WARNING: Max. abs. dist. between original SS " +
+            print(("POP. WARNING: Max. abs. dist. between original SS " +
                 "pop. dist'n and period-T pop. dist'n is greater than" +
-                  " 0.0003. It is " + str(omegaSSmaxdif) + ".")
+                  " 0.0003. It is " + str(omegaSSmaxdif) + "."))
         else:
-            print("POP. SUCCESS: orig. SS pop. dist is very close to " +
+            print(("POP. SUCCESS: orig. SS pop. dist is very close to " +
                   "period-T pop. dist'n. The maximum absolute " +
-                  "difference is " + str(omegaSSmaxdif) + ".")
+                  "difference is " + str(omegaSSmaxdif) + "."))
 
         # Plot the adjusted steady-state population distribution versus
         # the original population distribution. The difference should be
         # small
         omegaSSvTmaxdiff = np.absolute(omega_SS_orig - omega_SSfx).max()
         if omegaSSvTmaxdiff > 0.0003:
-            print("POP. WARNING: The maximimum absolute difference " +
+            print(("POP. WARNING: The maximimum absolute difference " +
                   "between any two corresponding points in the original"
                   + " and adjusted steady-state population " +
                   "distributions is" + str(omegaSSvTmaxdiff) + ", "+
-                  "which is greater than 0.0003.")
+                  "which is greater than 0.0003."))
         else:
-            print("POP. SUCCESS: The maximum absolute difference " +
+            print(("POP. SUCCESS: The maximum absolute difference " +
                   "between any two corresponding points in the original"
                   + " and adjusted steady-state population " +
-                  "distributions is " + str(omegaSSvTmaxdiff))
+                  "distributions is " + str(omegaSSvTmaxdiff)))
         fig, ax = plt.subplots()
         plt.plot(age_per_EpS, omega_SS_orig, label="Original Dist'n")
         plt.plot(age_per_EpS, omega_SSfx, label="Fixed Dist'n")
@@ -866,16 +866,16 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=True):
         immtol_solved = \
             np.absolute(imm_diagdict['fvec'].max()) < imm_tol
         if immtol_solved == True:
-            print("POP. SUCCESS: Adjusted immigration rates solved " +
+            print(("POP. SUCCESS: Adjusted immigration rates solved " +
                   "with maximum absolute error of " +
                   str(np.absolute(imm_diagdict['fvec'].max())) +
                   ", which is less than the tolerance of " +
-                  str(imm_tol))
+                  str(imm_tol)))
         else:
-            print("POP. WARNING: Adjusted immigration rates did not " +
+            print(("POP. WARNING: Adjusted immigration rates did not " +
                   "solve. Maximum absolute error of " +
                   str(np.absolute(imm_diagdict['fvec'].max())) +
-                  " is greater than the tolerance of " + str(imm_tol))
+                  " is greater than the tolerance of " + str(imm_tol)))
 
         # Test whether the steady-state growth rates implied by the
         # adjusted OMEGA matrix equals the steady-state growth rate of
@@ -888,17 +888,17 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=True):
         eigvalues2, eigvectors2 = np.linalg.eig(OMEGA2)
         g_n_SS_adj = (eigvalues[np.isreal(eigvalues2)].real).max() - 1
         if np.max(np.absolute(g_n_SS_adj - g_n_SS)) > 10 ** (-8):
-            print("FAILURE: The steady-state population growth rate" +
+            print(("FAILURE: The steady-state population growth rate" +
                   " from adjusted OMEGA is different (diff is " +
                   str(g_n_SS_adj - g_n_SS)  + ") than the steady-" +
                   "state population growth rate from the original" +
-                  " OMEGA.")
+                  " OMEGA."))
         elif np.max(np.absolute(g_n_SS_adj - g_n_SS)) <= 10 ** (-8):
-            print("SUCCESS: The steady-state population growth rate" +
+            print(("SUCCESS: The steady-state population growth rate" +
                   " from adjusted OMEGA is close to (diff is " +
                   str(g_n_SS_adj - g_n_SS)  + ") the steady-" +
                   "state population growth rate from the original" +
-                  " OMEGA.")
+                  " OMEGA."))
 
         # Do another test of the adjusted immigration rates. Create the
         # new OMEGA matrix implied by the new immigration rates. Plug in
@@ -907,18 +907,18 @@ def get_pop_objs(E, S, T, min_yr, max_yr, curr_year, GraphDiag=True):
         # steady-state population distribution
         omega_new = np.dot(OMEGA2, omega_SSfx)
         omega_errs = np.absolute(omega_new - omega_SSfx)
-        print("The maximum absolute difference between the adjusted " +
+        print(("The maximum absolute difference between the adjusted " +
               "steady-state population distribution and the " +
               "distribution generated by hitting the adjusted OMEGA " +
-              "transition matrix is " + str(omega_errs.max()))
+              "transition matrix is " + str(omega_errs.max())))
 
         # Plot the original immigration rates versus the adjusted
         # immigration rates
         immratesmaxdiff = \
             np.absolute(imm_rates_orig - imm_rates_adj).max()
-        print ("The maximum absolute distance between any two points " +
+        print(("The maximum absolute distance between any two points " +
                "of the original immigration rates and adjusted " +
-               "immigration rates is " + str(immratesmaxdiff))
+               "immigration rates is " + str(immratesmaxdiff)))
         fig, ax = plt.subplots()
         plt.plot(age_per_EpS, imm_rates_orig, label="Original Imm. Rates")
         plt.plot(age_per_EpS, imm_rates_adj, label="Adj. Imm. Rates")

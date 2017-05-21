@@ -38,18 +38,18 @@ def load_naics(path):
     rows = naics_codes.shape[0]
     # Initializing the corresponding naics tree:
     naics_tree = dc.tree()
-    naics_tree.enum_inds = [dc.industry([]) for i in xrange(0,rows)]
+    naics_tree.enum_inds = [dc.industry([]) for i in range(0,rows)]
     naics_tree.root = naics_tree.enum_inds[0]
     naics_tree.par = [0]*rows
     # Read the naics codes into the tree:
-    for i in xrange(0, rows):
+    for i in range(0, rows):
         cur_codes = pd.DataFrame(naics_codes.iloc[i,0].split("-"))
         if(cur_codes.shape[0] == 2):
-            cur_codes = pd.DataFrame(range(int(cur_codes.iloc[0,0]),
-                                           int(cur_codes.iloc[1,0])+1))
+            cur_codes = pd.DataFrame(list(range(int(cur_codes.iloc[0,0]),
+                                           int(cur_codes.iloc[1,0])+1)))
         naics_tree.enum_inds[i].append_dfs(("Codes:", cur_codes))
         cur_rows = naics_tree.enum_inds[i].data.dfs["Codes:"].shape[0]
-        for j in xrange(0, cur_rows):
+        for j in range(0, cur_rows):
             code = int(naics_tree.enum_inds[i].data.dfs["Codes:"].iloc[j,0])
             naics_tree.enum_inds[i].data.dfs["Codes:"].iloc[j,0] = code
     # Creating the tree structure:
@@ -59,7 +59,7 @@ def load_naics(path):
     levels_index = [0]
     cur_lvl = 0
     # Going through every industry in the tree and finding the parent/children:
-    for i in xrange(1,rows):
+    for i in range(1,rows):
         cur_ind = naics_tree.enum_inds[i]
         cur_codes = cur_ind.data.dfs["Codes:"]
         cur_rows = cur_codes.shape[0]
@@ -68,8 +68,8 @@ def load_naics(path):
             prev_ind = levels[cur_lvl]
             prev_codes = prev_ind.data.dfs["Codes:"]
             prev_rows = prev_codes.shape[0]
-            for j in xrange(0, cur_rows):
-                for k in xrange(0, prev_rows):
+            for j in range(0, cur_rows):
+                for k in range(0, prev_rows):
                     if cur_lvl == 0:
                         # The industry's parent is the root.
                         par_found = True
@@ -146,7 +146,7 @@ def load_soi_corporate_data(data_tree, data_folder):
                       ("Earnings (rtnd appr)", "RTND_ERNGS_APPR"),
                       ("Earnings (rtnd unappr.)", "COMP_RTND_ERNGS_UNAPPR"),
                       ("Cost of Treasury Stock", "CST_TRSRY_STCK")])
-    data_cols = cols_dict.keys()
+    data_cols = list(cols_dict.keys())
     # Initializing data on all corporations:
     for i in data_tree.enum_inds:
         i.append_dfs(("tot_corps", pd.DataFrame(np.zeros((1,len(data_cols))),
@@ -251,7 +251,7 @@ def load_soi_partner_data(data_tree, data_folder):
     start_col = search_ws(sheet_01, "All\nindustries", 20)[1]
     data_01 = pd.DataFrame(np.zeros((num_cols-start_col,3)), columns = cols_01)
     # Extracting the data:
-    for i in xrange(0, num_rows):
+    for i in range(0, num_rows):
         if("total net income" in str(sheet_01.cell_value(i,0)).lower()):
             data_01["Total net income"] = sheet_01.row_values(i+1,start_col)
             data_01["Total net loss"] = sheet_01.row_values(i+2,start_col)
@@ -279,11 +279,11 @@ def load_soi_partner_data(data_tree, data_folder):
     # The data to be extracted on partnerships with income:
     inc_data_03 = [None]*len(gen_03)
     # Extracting the data (note that the rows with total data appear first):
-    for i in xrange(0, len(gen_03)):
-        for row1 in xrange(0, cur_rows):
+    for i in range(0, len(gen_03)):
+        for row1 in range(0, cur_rows):
             if(gen_03[i].lower() in str(sheet_03.cell_value(row1,0)).lower()):
                 tot_data_03[i] = sheet_03.row_values(row1,1)
-                for row2 in xrange(row1+1, cur_rows):
+                for row2 in range(row1+1, cur_rows):
                     cur_cell = str(sheet_03.cell_value(row2,0)).lower()
                     if(gen_03[i].lower() in cur_cell):
                         inc_data_03[i] = sheet_03.row_values(row2,1)
@@ -321,8 +321,8 @@ def load_soi_partner_data(data_tree, data_folder):
                "Nominee and other limited partners"]
     # Extracting the relevant data:
     data_05 = [None]*len(cols_05)
-    for i in xrange(0, len(cols_05)):
-        for row in xrange(0, cur_rows):
+    for i in range(0, len(cols_05)):
+        for row in range(0, cur_rows):
             if(cols_05[i].lower() in str(sheet_05.cell_value(row,0)).lower()):
                 data_05[i] = sheet_05.row_values(row,1)
                 break
@@ -337,7 +337,7 @@ def load_soi_partner_data(data_tree, data_folder):
     pa03cross = pd.read_csv(pa_03_cross_file)
     pa05cross = pd.read_csv(pa_05_cross_file)
     # Processing the three dataframes into the tree
-    for index in xrange(0,3):
+    for index in range(0,3):
         cur_name = ["PA_inc/loss","PA_assets","PA_types"][index]
         cur_data = [data_01, data_03, data_05][index]
         cur_cols = [cols_01, cols_03, cols_05][index]
@@ -348,14 +348,14 @@ def load_soi_partner_data(data_tree, data_folder):
             i.append_dfs((cur_name, pd.DataFrame(np.zeros((1,len(cur_cols))),
                                                  columns = cur_cols)))
         # Add data to industries in the tree based on fraction of codes shared:
-        for i in xrange(0, len(cur_cross["NAICS Code:"])):
+        for i in range(0, len(cur_cross["NAICS Code:"])):
             if pd.isnull(cur_cross["NAICS Code:"][i]):
                 continue
             cur_codes = str(cur_cross["NAICS Code:"][i]).split(".")
             num_found = 0
-            for k in xrange(0, len(cur_codes)):
+            for k in range(0, len(cur_codes)):
                 cur_codes[k] = int(cur_codes[k])
-            for j in xrange(0, len(data_tree.enum_inds)):
+            for j in range(0, len(data_tree.enum_inds)):
                 cur_ind = data_tree.enum_inds[enum_index]
                 for k in cur_codes:
                     for l in cur_ind.data.dfs["Codes:"][0]:
@@ -396,12 +396,12 @@ def load_soi_proprietor_data(data_tree, data_folder):
     #
     count1 = 0
     count2 = 0
-    for i in xrange(pos1[0],cur_ws.nrows):
+    for i in range(pos1[0],cur_ws.nrows):
         cur_cell = str(cur_ws.cell_value(i,pos1[1]))
-        for j in xrange(0, cur_cross.shape[0]):
+        for j in range(0, cur_cross.shape[0]):
             if(cur_cell.lower().strip() == str(cur_cross.iloc[count1,0]).lower().strip()):
                 cur_codes = str(cur_cross.iloc[count1,1]).split(".")
-                for k in xrange(0, len(data_tree.enum_inds)):
+                for k in range(0, len(data_tree.enum_inds)):
                     for l in data_tree.enum_inds[count2].data.dfs["Codes:"].iloc[:,0]:
                         for m in cur_codes:
                             if str(l) == str(m):
@@ -424,7 +424,7 @@ def load_soi_proprietor_data(data_tree, data_folder):
     total_pa = 0
     cur_codes = [111,112]
     proportions = np.zeros(len(cur_codes))
-    for i in xrange(0, len(cur_codes)):
+    for i in range(0, len(cur_codes)):
         cur_ind = find_naics(data_tree, cur_codes[i])
         total_pa_land += cur_ind.data.dfs["PA_assets"]["Land (Net)"][0]
         total_pa += cur_ind.data.dfs["PA_assets"]["Land (Net)"][0] + cur_ind.data.dfs["PA_assets"]["Depreciable assets (Net)"][0]
@@ -436,7 +436,7 @@ def load_soi_proprietor_data(data_tree, data_folder):
         for i in len(proportions):
             proportions[i] = 1.0/len(proportions)
     #
-    for i in xrange(0,len(cur_codes)):
+    for i in range(0,len(cur_codes)):
         cur_ind = find_naics(data_tree, cur_codes[i])
         cur_ind.data.dfs["farm_prop"]["Land"][0] = land_mult * cur_ind.data.dfs["PA_assets"]["Land (Net)"][0]/total_pa
         cur_ind.data.dfs["farm_prop"]["FA"][0] = (proportions[i]*total) - cur_ind.data.dfs["farm_prop"]["Land"][0]
@@ -508,7 +508,7 @@ def find_naics: Defines a function that finds a naics code in a tree.
 '''
 def find_naics(tree, term):
     for i in tree.enum_inds:
-        for j in xrange(0, i.data.dfs["Codes:"].shape[0]):
+        for j in range(0, i.data.dfs["Codes:"].shape[0]):
             if(term == i.data.dfs["Codes:"].iloc[j,0]):
                 return i
     return None
@@ -534,7 +534,7 @@ def search_ws(sheet, search_term, distance, warnings = True, origin = [0,0], exa
     current_diagonal = 1
     total_columns  = sheet.ncols
     total_rows  = sheet.nrows
-    for n in xrange(0, final_search):
+    for n in range(0, final_search):
         if ((current_diagonal+1)*current_diagonal)/2 < n+1:
             current_diagonal += 1
         
@@ -552,8 +552,8 @@ def search_ws(sheet, search_term, distance, warnings = True, origin = [0,0], exa
             if str(search_term).lower() in str(sheet.cell_value(i+origin[0],j+origin[1])).lower():
                 return [i+origin[0],j+origin[1]]
     if warnings:
-        print "Warning: No such search entry found in the specified search space."
-        print "Check sample worksheet and consider changing distance input."
+        print("Warning: No such search entry found in the specified search space.")
+        print("Check sample worksheet and consider changing distance input.")
     
     return [-1,-1]
 
@@ -636,9 +636,9 @@ def get_proportions(codes, tree, df_name, sub_df = None):
     proportions = np.zeros(len(codes))
     indexes = np.zeros(len(codes))
     enum_index = len(tree.enum_inds) - 1
-    for i in xrange(0, len(codes)):
+    for i in range(0, len(codes)):
         cur_code = codes[i]
-        for j in xrange(0, len(tree.enum_inds)):
+        for j in range(0, len(tree.enum_inds)):
             enum_index = (enum_index+1) % len(tree.enum_inds)
             cur_ind = tree.enum_inds[enum_index]
             if(compare_codes([cur_code], cur_ind.data.dfs["Codes:"].iloc[:,0]) != 0):
@@ -654,7 +654,7 @@ def get_proportions(codes, tree, df_name, sub_df = None):
     #
     if(sum(proportions) == 0):
         proportions = np.array([1.0]*len(proportions))/len(proportions)
-        print "BOO"
+        print("BOO")
         return pd.DataFrame(np.vstack((indexes, proportions)))
     #
     proportions = proportions/sum(proportions)
@@ -683,7 +683,7 @@ def read_bea(output_tree, data_folder):
         sht_pos = search_ws(bea_readme, "bea code", 25, False, [0,0], True)
         sht_pos[1] = sht_pos[1] - 1
     if(sht_pos == [-1,-1]):
-        print "Error in reading BEA fixed asset \"readme\" sheet."
+        print("Error in reading BEA fixed asset \"readme\" sheet.")
         return None
     cur_row = sht_pos[0] + 1
     cur_col = sht_pos[1]
@@ -695,7 +695,7 @@ def read_bea(output_tree, data_folder):
         cur_row += 1
     # Making a list of BEA codes based on the names of the worksheets:
     bea_codes1 = np.zeros(num_shts-1, dtype=object)
-    for index in xrange(1, num_shts):
+    for index in range(1, num_shts):
         bea_codes1[index-1] = str(sht_names[index])
     # Making a list of BEA codes based on info in the readme sheet:
     array_index = 0
@@ -710,13 +710,13 @@ def read_bea(output_tree, data_folder):
     # Reading in a list of the assets in the BEA file:
     list_file = os.path.abspath(bea_folder + "\\detailnonres_list.csv")
     asset_list = pd.read_csv(list_file)
-    for i in xrange(0, asset_list.shape[0]):
+    for i in range(0, asset_list.shape[0]):
         asset_list.iloc[i,0] = asset_list.iloc[i,0].replace("\xa0", " ").strip()
     
     # Reading in the corresponding naics codes:
     naics_file = os.path.abspath(bea_folder + "\\detailnonres_naics.csv")
     naics_cross = pd.read_csv(naics_file).replace("\xa0", " ")
-    for i in xrange(0, naics_cross.shape[0]):
+    for i in range(0, naics_cross.shape[0]):
         naics_cross["Industry"][i] = naics_cross["Industry"][i].replace("\xa0", " ").strip()
     # Creating a chart cross-referencing industry names, BEA and NAICS codes.
     chart_cols = ["Industry","BEA Code","NAICS Code"]
@@ -731,7 +731,7 @@ def read_bea(output_tree, data_folder):
             if(str(bea_codes1[i]) == str(bea_readme.cell_value(cur_row,cur_col+1))):
                 bea_chart["Industry"][i] = str(bea_readme.cell_value(cur_row,cur_col)).replace('\xa0', ' ').strip()
                 bea_chart["BEA Code"][i] = str(bea_readme.cell_value(cur_row,cur_col+1))
-                for k in xrange(0, num_naics):
+                for k in range(0, num_naics):
                     naics_counter = (naics_counter+1) % num_naics
                     if(naics_cross["Industry"][naics_counter] == bea_chart["Industry"][i]):
                         bea_chart["NAICS Code"][i] = naics_cross["NAICS"][naics_counter]
@@ -741,7 +741,7 @@ def read_bea(output_tree, data_folder):
             elif(str(bea_codes1[i]) == str(bea_readme.cell_value(cur_row, cur_col+1))[:-2]):
                 bea_chart["Industry"][i] = str(bea_readme.cell_value(cur_row, cur_col)).replace('\xa0', ' ').strip()
                 bea_chart["BEA Code"][i] = str(bea_readme.cell_value(cur_row, cur_col+1))[:-2]
-                for k in xrange(0, num_naics):
+                for k in range(0, num_naics):
                     naics_counter = (naics_counter+1) % num_naics
                     if(naics_cross["Industry"][naics_counter] == bea_chart["Industry"][i]):
                         bea_chart["NAICS Code"][i] = naics_cross["NAICS"][naics_counter]
@@ -755,9 +755,9 @@ def read_bea(output_tree, data_folder):
     for i in bea_chart["BEA Code"]:
         cur_sht = bea_book.sheet_by_name(i)
         sht_pos = search_ws(cur_sht, "asset codes", 25, False)
-        for j in xrange(0, len(asset_list)): #xrange(sht_pos[0]+2, cur_sht.nrows):
+        for j in range(0, len(asset_list)): #xrange(sht_pos[0]+2, cur_sht.nrows):
             cur_asset = asset_list.iloc[j,0]
-            for k in xrange(sht_pos[0]+2, cur_sht.nrows):
+            for k in range(sht_pos[0]+2, cur_sht.nrows):
                 cur_cell = str(cur_sht.cell_value(k, sht_pos[1]+1)).replace("\xa0", " ").strip()
                 if(cur_asset == cur_cell):
                     bea_table[i][j] = float(cur_sht.cell_value(k, cur_sht.ncols-1))
@@ -781,20 +781,20 @@ def read_bea(output_tree, data_folder):
                       "Sole Proprietors"]
     # Initialize tree for assets data:
     asset_tree = load_naics(data_folder + "\\2012_NAICS_Codes.csv")
-    for i in xrange(0, len(asset_tree.enum_inds)):
+    for i in range(0, len(asset_tree.enum_inds)):
         asset_tree.enum_inds[i].data.append(("All", pd.DataFrame(np.zeros((1, asset_list.shape[0])), columns = asset_list.iloc[:,0])))
         asset_tree.enum_inds[i].data.append(("Corp", pd.DataFrame(np.zeros((1, asset_list.shape[0])), columns = asset_list.iloc[:,0])))
         asset_tree.enum_inds[i].data.append(("Non-Corp", pd.DataFrame(np.zeros((1, asset_list.shape[0])), columns = asset_list.iloc[:,0])))
     # Fill in data from BEA's fixed asset table:
     enum_index = len(output_tree.enum_inds) - 1
-    for i in xrange(0, bea_table.shape[1]):
+    for i in range(0, bea_table.shape[1]):
         cur_codes = bea_chart["NAICS Code"][i].split(".")
         tot_share = 0
         all_proportions = get_proportions(cur_codes, output_tree, "FA").iloc[1,:]
         corp_proportions = get_proportions(cur_codes, output_tree, "FA", corp_types).iloc[1,:]
         non_corp_proportions = get_proportions(cur_codes, output_tree, "FA", non_corp_types).iloc[1,:]
-        for code_index in xrange(0, len(cur_codes)):
-            for j in xrange(0, len(asset_tree.enum_inds)):
+        for code_index in range(0, len(cur_codes)):
+            for j in range(0, len(asset_tree.enum_inds)):
                 enum_index = (enum_index+1) % len(asset_tree.enum_inds)
                 if(sum(output_tree.enum_inds[enum_index].data.dfs["FA"].iloc[0,:]) == 0):
                     continue
@@ -811,7 +811,7 @@ def read_bea(output_tree, data_folder):
                 tot_share += share
                 if(share == 0):
                     continue
-                for k in xrange(0, asset_tree.enum_inds[0].data.dfs["All"].shape[1]):
+                for k in range(0, asset_tree.enum_inds[0].data.dfs["All"].shape[1]):
                     cur_data.dfs["All"].iloc[0,k] = bea_table.iloc[k,i] * all_ratio * all_proportions[code_index]
                     cur_data.dfs["Corp"].iloc[0,k] = bea_table.iloc[k,i] * corp_ratio * corp_proportions[code_index]
                     cur_data.dfs["Non-Corp"].iloc[0,k] = bea_table.iloc[k,i] * non_corp_ratio * non_corp_proportions[code_index]
@@ -834,7 +834,7 @@ def read_inventories(output_tree, data_folder):
     cur_index = search_ws(sht0, 1, 25, True, [0,0], True)
     check_index = search_ws(sht0, "line", 20)
     if(cur_index[1] != check_index[1]):
-        print "ERROR"
+        print("ERROR")
     # Breaking down by corporate tax status:
     corp_types = ["C Corporations",
                   "Corporate general partners", 
@@ -862,7 +862,7 @@ def read_inventories(output_tree, data_folder):
     inv_data = np.zeros(inv_cross.shape[0])
     #
     cross_index = 0
-    for i in xrange(cur_index[0], num_rows):
+    for i in range(cur_index[0], num_rows):
         if(cross_index >= inv_cross.shape[0]):
             break
         cur_list = str(sht0.cell_value(i, cur_index[1])).strip()
@@ -878,10 +878,10 @@ def read_inventories(output_tree, data_folder):
             # Data is in billions:
             inv_data[cross_index-1] = (10**9) * inv_data[cross_index-1]
     #
-    for i in xrange(0, inv_cross.shape[0]):
+    for i in range(0, inv_cross.shape[0]):
         cur_codes = inv_cross["NAICS"][i].strip().split(".")
         proportions = get_proportions(cur_codes, output_tree, "INV")
-        for j in xrange(0, proportions.shape[1]):
+        for j in range(0, proportions.shape[1]):
             cur_ind = inv_tree.enum_inds[int(proportions.iloc[0,j])]
             prev_data = output_tree.enum_inds[int(proportions.iloc[0,j])].data.dfs["INV"]
             if(sum(prev_data.iloc[0, :]) != 0):
@@ -952,15 +952,15 @@ def calc_depr_rates(asset_tree, inv_tree, land_tree, data_folder):
     for i in types:
         asset_list = asset_tree.enum_inds[0].data.dfs[i].columns.values.tolist()
         match = np.array([-1] * len(asset_list))
-        for j in xrange(0, asset_tree.enum_inds[0].data.dfs[i].shape[1]):
-            for k in xrange(0, len(econ_assets)):
+        for j in range(0, asset_tree.enum_inds[0].data.dfs[i].shape[1]):
+            for k in range(0, len(econ_assets)):
                 if str(asset_list[j]).strip() == str(econ_assets[k]).strip():
                     match[j] = k
-        for j in xrange(0, len(depr_tree.enum_inds)):
+        for j in range(0, len(depr_tree.enum_inds)):
             cur_sum = 0
-            for k in xrange(0, len(asset_list)):
+            for k in range(0, len(asset_list)):
                 if(match[k] == -1):
-                    print k
+                    print(k)
                     continue
                 cur_sum += asset_tree.enum_inds[j].data.dfs[i].iloc[0,k] * econ_rates[match[k]]
             if(sum(asset_tree.enum_inds[j].data.dfs[i].iloc[0,:]) != 0):
@@ -968,7 +968,7 @@ def calc_depr_rates(asset_tree, inv_tree, land_tree, data_folder):
             else:
                 depr_tree.enum_inds[j].data.dfs["Economic"][i][0] = 0
         # Inventories and land have an approximately zero depreciation rate:
-        for j in xrange(0, len(depr_tree.enum_inds)):
+        for j in range(0, len(depr_tree.enum_inds)):
             tot_assets = sum(asset_tree.enum_inds[j].data.dfs["All"].iloc[0,:])
             tot_inv = inv_tree.enum_inds[j].data.dfs["Inventories"]["All"][0]
             tot_land = land_tree.enum_inds[j].data.dfs["Land"]["All"][0]
@@ -989,7 +989,7 @@ def calc_tax_depr_rates(asset_tree, inv_tree, land_tree, data_folder):
     tax_file = os.path.abspath(depr_folder + "\\BEA_IRS_Crosswalk.csv")
     tax_data = pd.read_csv(tax_file).fillna(0)
     tax_assets = tax_data["Asset Type"]
-    for i in xrange(0, len(tax_assets)):
+    for i in range(0, len(tax_assets)):
         tax_assets[i] = str(tax_assets[i]).replace("\xa0", " ").strip()
     #
     r = .05
@@ -997,7 +997,7 @@ def calc_tax_depr_rates(asset_tree, inv_tree, land_tree, data_folder):
     #tax_cols = {"GDS 200%": 2, "GDS 150%": 1.5, "GDS SL": 1.0, "ADS SL": 1.0}
     tax_gds_mthds = {"GDS 200%": 2.0, "GDS 150%": 1.5, "GDS SL": 1.0}
     tax_ads_mthds = {"ADS SL": 1.0}
-    tax_cols = tax_gds_mthds.keys() + tax_ads_mthds.keys()
+    tax_cols = list(tax_gds_mthds.keys()) + list(tax_ads_mthds.keys())
     tax_systems = {"GDS": tax_gds_mthds, "ADS": tax_ads_mthds}
     tax_rates = pd.DataFrame(np.zeros((len(tax_assets),len(tax_cols))), columns = tax_cols)
     tax_rates["Asset"] = tax_assets
@@ -1030,16 +1030,16 @@ def calc_tax_depr_rates(asset_tree, inv_tree, land_tree, data_folder):
     for i in types:
         asset_list = asset_tree.enum_inds[0].data.dfs[i].columns.values.tolist()
         match = np.array([-1] * len(asset_list))
-        for j in xrange(0, asset_tree.enum_inds[0].data.dfs[i].shape[1]):
-            for k in xrange(0, len(tax_assets)):
+        for j in range(0, asset_tree.enum_inds[0].data.dfs[i].shape[1]):
+            for k in range(0, len(tax_assets)):
                 if str(asset_list[j]).strip() == str(tax_assets[k]).strip():
                     match[j] = k
-        for j in xrange(0, len(depr_tree.enum_inds)):
+        for j in range(0, len(depr_tree.enum_inds)):
             cur_ind = depr_tree.enum_inds[j]
             for k in tax_cols:
                 cur_tax = cur_ind.data.dfs[k][i]
                 cur_sum = 0.0
-                for l in xrange(0, len(asset_list)):
+                for l in range(0, len(asset_list)):
                     if(match[l] == -1):
                         continue
                     cur_sum += asset_tree.enum_inds[j].data.dfs[i].iloc[0,l] * tax_rates[k][match[l]]        
@@ -1059,8 +1059,8 @@ def compare_codes(codes1, codes2):
     if(len(codes2) == 0):
         return 0
     num_match = 0.0
-    for i in xrange(0, len(codes2)):
-        for j in xrange(0, len(codes1)):
+    for i in range(0, len(codes2)):
+        for j in range(0, len(codes1)):
             if(str(codes2[i]) == str(codes1[j])):
                 num_match += 1.0
     return float(num_match)/len(codes1)
@@ -1068,8 +1068,8 @@ def compare_codes(codes1, codes2):
 def find_first_match(tree, codes):
     for i in tree.enum_inds:
         ind_codes = i.data.dfs["Codes:"]
-        for j in xrange(0, len(codes)):
-            for k in xrange(0, ind_codes.shape[0]):
+        for j in range(0, len(codes)):
+            for k in range(0, ind_codes.shape[0]):
                 if(str(codes[j]) == str(ind_codes.iloc[k,0])):
                     return i
     return None
@@ -1079,8 +1079,8 @@ def find_matches(tree, codes):
     for i in tree.enum_inds:
         ind_codes = i.data.dfs["Codes:"]
         is_match = False
-        for j in xrange(0, len(codes)):
-            for k in xrange(0, ind_codes.shape[0]):
+        for j in range(0, len(codes)):
+            for k in range(0, ind_codes.shape[0]):
                 if(str(codes[j]) == str(ind_codes.iloc[k,0])):
                     matches.append[i]
                     is_match = True

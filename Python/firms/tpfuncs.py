@@ -223,7 +223,7 @@ def get_cbepath(params, Gamma1, r_path, w_path, p_c_path, p_tilde_path,
                                 p_c_path[:,0], p_tilde_path[0],n[S-1],Gamma1[S-2])
     c_path[S-1, 0, :], c_cstr = firm.get_c(alpha[:,0],c_bar[:,0],c_tilde_path[S-1,0],
                                      p_c_path[:,0],p_tilde_path[0])
-    for u in xrange(2, S):
+    for u in range(2, S):
         # b_guess = b_ss[-u+1:]
         b_guess = np.diagonal(b_path[S-u:, :u-1])
         pl_params = (S, alpha[:,:u], beta, sigma, tp_tol)
@@ -250,7 +250,7 @@ def get_cbepath(params, Gamma1, r_path, w_path, p_c_path, p_tilde_path,
     DiagMaskc = np.eye(S, dtype=bool)
     DiagMaskc_tiled = np.tile(np.expand_dims(np.eye(S, dtype=bool),axis=2),(1,1,I))
 
-    for t in xrange(1, T+1): # Go from periods 1 to T
+    for t in range(1, T+1): # Go from periods 1 to T
         # b_guess = b_ss
         b_guess = np.diagonal(b_path[:, t-1:t+S-2])
         pl_params = (S, alpha[:,t-1:t+S-1], beta, sigma, tp_tol)
@@ -1128,7 +1128,7 @@ def TP_fsolve(guesses, params, K_ss, X_ss, Gamma1, c_bar, A,
         X_inv_path[:,t] = np.dot(Inv_path[:,t],xi)
         X_c_path[:,t] = np.dot(np.reshape(C_path[:,t],(1,I)),pi)
     RCdiff_path = (X_path - X_c_path - X_inv_path) 
-    print 'the max RC diff is: ', np.absolute(RCdiff_path).max(axis=1)
+    print('the max RC diff is: ', np.absolute(RCdiff_path).max(axis=1))
 
     # Check and punish constraing violations
     mask1 = r_path[:T] <= 0
@@ -1146,35 +1146,35 @@ def TP_fsolve(guesses, params, K_ss, X_ss, Gamma1, c_bar, A,
     p_error[mask6] = 1e14
 
 
-    print 'max capital market clearing distance: ', np.absolute(K_market_error).max()
-    print 'max labor market clearing distance: ', np.absolute(L_market_error).max()
-    print 'min capital market clearing distance: ', np.absolute(K_market_error).min()
-    print 'min labor market clearing distance: ', np.absolute(L_market_error).min()
+    print('max capital market clearing distance: ', np.absolute(K_market_error).max())
+    print('max labor market clearing distance: ', np.absolute(L_market_error).max())
+    print('min capital market clearing distance: ', np.absolute(K_market_error).min())
+    print('min labor market clearing distance: ', np.absolute(L_market_error).min())
 
-    print 'the max pricing error is: ', np.absolute(p_error).max()
-    print 'the min pricing error is: ', np.absolute(p_error).min()
+    print('the max pricing error is: ', np.absolute(p_error).max())
+    print('the min pricing error is: ', np.absolute(p_error).min())
 
-    print 'maximum euler error is: ', np.absolute(eulerr_path).max()
+    print('maximum euler error is: ', np.absolute(eulerr_path).max())
     if np.isnan(np.absolute(eulerr_path).max()):
-        print 'euler nan, price guess is: ', p_path[:,:T]
-        print 'euler nan, r guess is: ', r_path[:T]
-        print 'euler nan, r guess is: ', w_path[:T]
+        print('euler nan, price guess is: ', p_path[:,:T])
+        print('euler nan, r guess is: ', r_path[:T])
+        print('euler nan, r guess is: ', w_path[:T])
 
 
     V_alt_path = (((p_path[:,:T-1]*X_path[:,:T-1] - w_path[:T-1]*L_path[:,:T-1] - 
                             p_k_path[:,:T-1]*(K_path[:,1:T]-(1-delta[:,:T-1])*K_path[:,:T-1])) + (p_k_path[:,1:T]*K_path[:,1:T])) /(1+r_path[1:T]))
     V_path = p_k_path[:,:T]*K_path[:,:T]
 
-    print 'the max V error is: ', np.absolute(V_alt_path-V_path[:,:T-1]).max()
-    print 'the min V error is: ', np.absolute(V_alt_path-V_path[:,:T-1]).min()
+    print('the max V error is: ', np.absolute(V_alt_path-V_path[:,:T-1]).max())
+    print('the min V error is: ', np.absolute(V_alt_path-V_path[:,:T-1]).min())
 
     # get implied r:
     r_implied = ((p_path[:,:T]/p_k_path[:,:T])*((A[:,:T]**((epsilon[:,:T]-1)/epsilon[:,:T]))*(((gamma[:,:T]*X_path)/K_path)**(1/epsilon[:,:T]))) 
                  + (1-delta[:,:T])*(p_k_path[:,1:T+1]/p_path[:,1:T+1]) - (p_k_path[:,:T]/p_path[:,1:T+1]))
 
 
-    print 'the max r error is: ', np.absolute(r_implied-r_path[:T]).max()
-    print 'the min r error is: ', np.absolute(r_implied-r_path[:T]).min()
+    print('the max r error is: ', np.absolute(r_implied-r_path[:T]).max())
+    print('the min r error is: ', np.absolute(r_implied-r_path[:T]).min())
 
     
 

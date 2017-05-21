@@ -9,7 +9,7 @@ import numpy as np
 import numpy.random as rnd
 import scipy.optimize as opt
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except:
     import pickle
 import pandas as pd
@@ -430,7 +430,7 @@ for t in years_list:
                        elapsed_time
         ----------------------------------------------------------------
         '''
-        print "year=", t, "Age=", s
+        print("year=", t, "Age=", s)
         df = data_trnc[data_trnc['Age'] == s]
         PopPct_age[s-s_min, t-beg_yr] = \
             df['Weights'].sum() / TotPop_yr[t-beg_yr]
@@ -465,8 +465,8 @@ for t in years_list:
             # Estimate parameters for age with sufficient data
             if desc_data == True:
                 # print some desciptive stats
-                print 'Descriptive Statistics for age == ', s
-                print df.describe()
+                print('Descriptive Statistics for age == ', s)
+                print(df.describe())
 
             if graph_data == True:
                 '''
@@ -807,7 +807,7 @@ for t in years_list:
                 ax.set_ylabel('Total Capital Income')
                 ax.set_zlabel('d MTR labor inc.')
                 plt.title('d MTR labor inc.: Age=' + str(s) + ', Year=' + str(t))
-                print dmtrx_grid.min(), dmtrx_grid.max()
+                print(dmtrx_grid.min(), dmtrx_grid.max())
                 plt.show()
 
                 dmtry_grid = gen_dmtry_grid(inc_lab_grid, inc_cap_grid,
@@ -820,7 +820,7 @@ for t in years_list:
                 ax.set_ylabel('Total Capital Income')
                 ax.set_zlabel('d MTR capital inc.')
                 plt.title('d MTR capital inc.: Age=' + str(s) + ', Year=' + str(t))
-                print dmtry_grid.min(), dmtry_grid.max()
+                print(dmtry_grid.min(), dmtry_grid.max())
                 plt.show()
 
 elapsed_time = time.clock() - start_time
@@ -828,11 +828,11 @@ elapsed_time = time.clock() - start_time
 # Print tax function computation time
 if elapsed_time < 60: # seconds
     secs = round(elapsed_time, 3)
-    print 'Tax function estimation time: ', secs, ' sec.'
+    print('Tax function estimation time: ', secs, ' sec.')
 elif elapsed_time >= 60 and elapsed_time < 3600: # minutes
     mins = int(elapsed_time / 60)
     secs = round(((elapsed_time / 60) - mins) * 60, 1)
-    print 'Tax function estimation time: ', mins, ' min, ', secs, ' sec'
+    print('Tax function estimation time: ', mins, ' min, ', secs, ' sec')
 
 '''
 ------------------------------------------------------------------------

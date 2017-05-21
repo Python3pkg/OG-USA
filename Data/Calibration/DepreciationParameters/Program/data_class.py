@@ -36,7 +36,7 @@ class pd_dfs:
     def append(self, *args):
         while len(args) == 1 and isinstance(args[0], (list,tuple)):
             args = args[0]
-        for i in xrange(len(args)):
+        for i in range(len(args)):
             if isinstance(args[i], (list,tuple)):
                 self.dfs[args[i][0]] = args[i][1]
             else:
@@ -90,7 +90,7 @@ class tree:
     #
     def __init__(self, root = None, enumeration = pd.DataFrame(np.zeros((0,0)))):
         self.root = root
-        self.enum_inds = [industry([]) for i in xrange(0,len(enumeration))]
+        self.enum_inds = [industry([]) for i in range(0,len(enumeration))]
         self.par = None
         
     def append_all(self, *args):

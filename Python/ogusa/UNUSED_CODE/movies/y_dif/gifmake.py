@@ -8,7 +8,7 @@ file_names = sorted((fn for fn in os.listdir('.') if fn.endswith('.png')))
 
 images = [Image.open(fn) for fn in file_names]
 
-print writeGif.__doc__
+print(writeGif.__doc__)
 # writeGif(filename, images, duration=0.1, loops=0, dither=1)
 #    Write an animated gif from the specified images.
 #    images should be a list of numpy arrays of PIL images.

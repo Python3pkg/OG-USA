@@ -27,7 +27,7 @@ def run_micro_macro(user_params):
     runner(**kwargs)
     time.sleep(0.5)
 
-    print "total time for baseline was ", (time.time() - start_time)
+    print("total time for baseline was ", (time.time() - start_time))
 
 
 if __name__ == "__main__":

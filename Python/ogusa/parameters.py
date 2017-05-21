@@ -27,11 +27,11 @@ import os
 import json
 import numpy as np
 import scipy.interpolate as si
-import demographics as dem
-import income as inc
+from . import demographics as dem
+from . import income as inc
 import pickle
-import txfunc
-import elliptical_u_est as ellip
+from . import txfunc
+from . import elliptical_u_est as ellip
 import matplotlib.pyplot as plt
 
 
@@ -98,7 +98,7 @@ def read_tax_func_estimate(pickle_path, pickle_file):
     --------------------------------------------------------------------
     '''
     if os.path.exists(pickle_path):
-        print 'pickle path exists'
+        print('pickle path exists')
         with open(pickle_path) as pfile:
             dict_params = pickle.load(pfile)
     else:
@@ -351,11 +351,11 @@ def get_parameters(test=False, baseline=False, guid='', user_modifiable=False, m
     delta_tau = 1 - ((1 - delta_annual) ** (float(ending_age - starting_age) / S))
 
     if tG1 > tG2:
-        print 'The first government spending rule change date, (', tG1, ') is after the second one (', tG2, ').'
+        print('The first government spending rule change date, (', tG1, ') is after the second one (', tG2, ').')
         err = "Gov't spending rule dates are inconsistent"
         raise RuntimeError(err)
     if tG2 > T:
-        print 'The second government spending rule change date, (', tG2, ') is after time T (', T, ').'
+        print('The second government spending rule change date, (', tG2, ') is after time T (', T, ').')
         err = "Gov't spending rule dates are inconsistent"
         raise RuntimeError(err)
 
@@ -371,14 +371,14 @@ def get_parameters(test=False, baseline=False, guid='', user_modifiable=False, m
         baseline_pckl = "TxFuncEst_baseline{}.pkl".format(guid)
         estimate_file = os.path.join(TAX_ESTIMATE_PATH,
                                      baseline_pckl)
-        print 'using baseline tax parameters'
+        print('using baseline tax parameters')
         dict_params = read_tax_func_estimate(estimate_file, baseline_pckl)
 
     else:
         policy_pckl = "TxFuncEst_policy{}.pkl".format(guid)
         estimate_file = os.path.join(TAX_ESTIMATE_PATH,
                                      policy_pckl)
-        print 'using policy tax parameters'
+        print('using policy tax parameters')
         dict_params = read_tax_func_estimate(estimate_file, policy_pckl)
 
 
@@ -500,7 +500,7 @@ def get_parameters(test=False, baseline=False, guid='', user_modifiable=False, m
 
     if metadata:
         params_meta = read_parameter_metadata()
-        for k,v in allvars.iteritems():
+        for k,v in allvars.items():
             params_meta[k]["value"] = v
         allvars = params_meta
 

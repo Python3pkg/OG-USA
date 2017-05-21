@@ -129,7 +129,7 @@ def run_micro_macro(user_params):
 
     counter = 0
     for x in reforms:
-        print 'Running reform ', counter
+        print('Running reform ', counter)
 
         REFORM_DIR = './OUTPUT_REFORM/' + str(counter) + '/'
 
@@ -146,7 +146,7 @@ def run_micro_macro(user_params):
 
         counter = counter + 1
 
-    print "total time was ", (time.time() - start_time)
+    print("total time was ", (time.time() - start_time))
 
 
 if __name__ == "__main__":

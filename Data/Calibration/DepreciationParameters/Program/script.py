@@ -54,7 +54,7 @@ Many industries are not listed in the SOI datasets. The data for these missing
     industries are interpolated.
 '''
 # Get a list of the names of all the pd dfs besides the list of codes:
-cur_names = data_tree.enum_inds[0].data.dfs.keys()
+cur_names = list(data_tree.enum_inds[0].data.dfs.keys())
 cur_names.remove("Codes:")
 # Populate missing industry data backwards throught the tree:
 naics.pop_back(data_tree, cur_names)

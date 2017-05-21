@@ -171,7 +171,7 @@ def get_data(baseline=False, start_year=2016, reform={}):
                        columns = ['MTR wage', 'MTR self-employed Wage','MTR capital income','Age',
                                   'Wage and Salaries', 'Self-Employed Income','Wage + Self-Employed Income',
                                   'Adjusted Total income','Total Tax Liability','Year', 'Weights'])
-        print 'year: ', str(calc1.current_year)
+        print('year: ', str(calc1.current_year))
 
     if reform:
         pkl_path = "micro_data_policy.pkl"

@@ -6,7 +6,7 @@ A 'smoke test' for the ogusa package. Uses a fake data set to run the
 baseline
 '''
 
-import cPickle as pickle
+import pickle as pickle
 import os
 import numpy as np
 import time
@@ -32,7 +32,7 @@ def runner(output_base, baseline_dir, baseline=False, analytical_mtrs=False,
     dirs = [saved_moments_dir, ss_dir, tpi_dir]
     for _dir in dirs:
         try:
-            print "making dir: ", _dir
+            print("making dir: ", _dir)
             os.makedirs(_dir)
         except OSError as oe:
             pass
@@ -40,7 +40,7 @@ def runner(output_base, baseline_dir, baseline=False, analytical_mtrs=False,
     if run_micro:
         txfunc.get_tax_func_estimate(baseline=baseline, analytical_mtrs=analytical_mtrs, age_specific=age_specific,
                                      start_year=user_params['start_year'], reform=reform, guid=guid)
-    print ("in runner, baseline is ", baseline)
+    print(("in runner, baseline is ", baseline))
     run_params = ogusa.parameters.get_parameters(baseline=baseline, guid=guid)
     run_params['analytical_mtrs'] = analytical_mtrs
     run_params['small_open'] = small_open
@@ -48,7 +48,7 @@ def runner(output_base, baseline_dir, baseline=False, analytical_mtrs=False,
 
     # Modify ogusa parameters based on user input
     if 'frisch' in user_params:
-        print "updating fricsh and associated"
+        print("updating fricsh and associated")
         b_ellipse, upsilon = ogusa.elliptical_u_est.estimation(user_params['frisch'],
                                                                run_params['ltilde'])
         run_params['b_ellipse'] = b_ellipse
@@ -59,7 +59,7 @@ def runner(output_base, baseline_dir, baseline=False, analytical_mtrs=False,
 
     # Modify ogusa parameters based on user input
     if 'g_y_annual' in user_params:
-        print "updating g_y_annual and associated"
+        print("updating g_y_annual and associated")
         ending_age = run_params['ending_age']
         starting_age = run_params['starting_age']
         S = run_params['S']
@@ -155,8 +155,8 @@ def runner(output_base, baseline_dir, baseline=False, analytical_mtrs=False,
     pickle.dump(macro_output, open(tpi_vars, "wb"))
 
 
-    print "Time path iteration complete.  It"
-    print "took {0} seconds to get that part done.".format(time.time() - tick)
+    print("Time path iteration complete.  It")
+    print("took {0} seconds to get that part done.".format(time.time() - tick))
 
 
 def runner_SS(output_base, baseline_dir, baseline=False, analytical_mtrs=False,
@@ -175,7 +175,7 @@ def runner_SS(output_base, baseline_dir, baseline=False, analytical_mtrs=False,
     dirs = [saved_moments_dir, ss_dir, tpi_dir]
     for _dir in dirs:
         try:
-            print "making dir: ", _dir
+            print("making dir: ", _dir)
             os.makedirs(_dir)
         except OSError as oe:
             pass
@@ -183,7 +183,7 @@ def runner_SS(output_base, baseline_dir, baseline=False, analytical_mtrs=False,
     if run_micro:
         txfunc.get_tax_func_estimate(baseline=baseline, analytical_mtrs=analytical_mtrs, age_specific=age_specific,
                                      start_year=user_params['start_year'], reform=reform, guid=guid)
-    print ("in runner, baseline is ", baseline)
+    print(("in runner, baseline is ", baseline))
     run_params = ogusa.parameters.get_parameters(baseline=baseline, guid=guid)
     run_params['analytical_mtrs'] = analytical_mtrs
     run_params['small_open'] = small_open
@@ -191,7 +191,7 @@ def runner_SS(output_base, baseline_dir, baseline=False, analytical_mtrs=False,
 
     # Modify ogusa parameters based on user input
     if 'frisch' in user_params:
-        print "updating fricsh and associated"
+        print("updating fricsh and associated")
         b_ellipse, upsilon = ogusa.elliptical_u_est.estimation(user_params['frisch'],
                                                                run_params['ltilde'])
         run_params['b_ellipse'] = b_ellipse
@@ -202,7 +202,7 @@ def runner_SS(output_base, baseline_dir, baseline=False, analytical_mtrs=False,
 
     # Modify ogusa parameters based on user input
     if 'g_y_annual' in user_params:
-        print "updating g_y_annual and associated"
+        print("updating g_y_annual and associated")
         ending_age = run_params['ending_age']
         starting_age = run_params['starting_age']
         S = run_params['S']

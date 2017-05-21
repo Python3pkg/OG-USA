@@ -21,12 +21,12 @@ This py-file creates the following other file(s):
 # Packages
 import numpy as np
 import scipy.optimize as opt
-import cPickle as pickle
+import pickle as pickle
 
 from . import tax
 from . import household
-import firm
-import utils
+from . import firm
+from . import utils
 import os
 
 
@@ -305,7 +305,7 @@ def inner_loop(outer_loop_vars, params, baseline, baseline_spending=False):
 
 
 
-    for j in xrange(J):
+    for j in range(J):
         # Solve the euler equations
         if j == 0:
             guesses = np.append(bssmat[:, j], nssmat[:, j])
@@ -352,7 +352,7 @@ def inner_loop(outer_loop_vars, params, baseline, baseline_spending=False):
         new_r = ss_hh_r
     w_params = (Z, gamma, epsilon)
     new_w = firm.get_w(Y, L, w_params)
-    print 'inner factor prices: ', new_r, new_w
+    print('inner factor prices: ', new_r, new_w)
 
     b_s = np.array(list(np.zeros(J).reshape(1, J)) + list(bssmat[:-1, :]))
     average_income_model = ((new_r * b_s + new_w * e * nssmat) *
@@ -521,9 +521,9 @@ def SS_solver(b_guess_init, n_guess_init, rss, wss, T_Hss, factor_ss, Yss, param
         if iteration > 10:
             if dist_vec[iteration] - dist_vec[iteration - 1] > 0:
                 nu /= 2.0
-                print 'New value of nu:', nu
+                print('New value of nu:', nu)
         iteration += 1
-        print "Iteration: %02d" % iteration, " Distance: ", dist
+        print("Iteration: %02d" % iteration, " Distance: ", dist)
 
     '''
     ------------------------------------------------------------------------
@@ -636,22 +636,22 @@ def SS_solver(b_guess_init, n_guess_init, rss, wss, T_Hss, factor_ss, Yss, param
 
     if small_open == False:
         resource_constraint = Yss - (Css + Iss + Gss)
-        print 'Yss= ', Yss, '\n', 'Gss= ', Gss, '\n', 'Css= ', Css, '\n', 'Kss = ', Kss, '\n', 'Iss = ', Iss, '\n', 'Lss = ', Lss, '\n', 'Debt service = ', debt_service_ss
-        print 'D/Y:', debt_ss/Yss, 'T/Y:', T_Hss/Yss, 'G/Y:', Gss/Yss, 'Rev/Y:', revenue_ss/Yss, 'business rev/Y: ', business_revenue/Yss, 'Int payments to GDP:', (rss*debt_ss)/Yss
-        print 'Check SS budget: ', Gss - (np.exp(g_y)*(1+g_n_ss)-1-rss)*debt_ss - revenue_ss + T_Hss
-        print 'resource constraint: ', resource_constraint
+        print('Yss= ', Yss, '\n', 'Gss= ', Gss, '\n', 'Css= ', Css, '\n', 'Kss = ', Kss, '\n', 'Iss = ', Iss, '\n', 'Lss = ', Lss, '\n', 'Debt service = ', debt_service_ss)
+        print('D/Y:', debt_ss/Yss, 'T/Y:', T_Hss/Yss, 'G/Y:', Gss/Yss, 'Rev/Y:', revenue_ss/Yss, 'business rev/Y: ', business_revenue/Yss, 'Int payments to GDP:', (rss*debt_ss)/Yss)
+        print('Check SS budget: ', Gss - (np.exp(g_y)*(1+g_n_ss)-1-rss)*debt_ss - revenue_ss + T_Hss)
+        print('resource constraint: ', resource_constraint)
     else:
         # include term for current account
         resource_constraint = Yss + new_borrowing  - (Css + BIss + Gss) + (ss_hh_r * Bss - (delta + ss_firm_r) * Kss - debt_service_ss)
-        print 'Yss= ', Yss, '\n', 'Css= ', Css, '\n', 'Bss = ', Bss, '\n', 'BIss = ', BIss, '\n', 'Kss = ', Kss, '\n', 'Iss = ', Iss, '\n', 'Lss = ', Lss, '\n', 'T_H = ', T_H,'\n', 'Gss= ', Gss
-        print 'D/Y:', debt_ss/Yss, 'T/Y:', T_Hss/Yss, 'G/Y:', Gss/Yss, 'Rev/Y:', revenue_ss/Yss, 'Int payments to GDP:', (rss*debt_ss)/Yss
-        print 'resource constraint: ', resource_constraint
+        print('Yss= ', Yss, '\n', 'Css= ', Css, '\n', 'Bss = ', Bss, '\n', 'BIss = ', BIss, '\n', 'Kss = ', Kss, '\n', 'Iss = ', Iss, '\n', 'Lss = ', Lss, '\n', 'T_H = ', T_H,'\n', 'Gss= ', Gss)
+        print('D/Y:', debt_ss/Yss, 'T/Y:', T_Hss/Yss, 'G/Y:', Gss/Yss, 'Rev/Y:', revenue_ss/Yss, 'Int payments to GDP:', (rss*debt_ss)/Yss)
+        print('resource constraint: ', resource_constraint)
 
     if Gss < 0:
-        print 'Steady state government spending is negative to satisfy budget'
+        print('Steady state government spending is negative to satisfy budget')
 
     if ENFORCE_SOLUTION_CHECKS and np.absolute(resource_constraint) > mindist_SS:
-        print 'Resource Constraint Difference:', resource_constraint
+        print('Resource Constraint Difference:', resource_constraint)
         err = "Steady state aggregate resource constraint not satisfied"
         raise RuntimeError(err)
 
@@ -724,7 +724,7 @@ def SS_fsolve(guesses, params):
     T_H = guesses[2]
     factor = guesses[3]
 
-    print 'r, w at outset: ', r, w
+    print('r, w at outset: ', r, w)
 
     # Solve for the steady state levels of b and n, given w, r, T_H and
     # factor
@@ -750,7 +750,7 @@ def SS_fsolve(guesses, params):
 
   #  print 'errors: ', error1, error2, error3, error4
 
-    print 'Y: ', new_Y
+    print('Y: ', new_Y)
   #  print 'factor: ', new_factor
   #  print 'factor prices: ', new_r, new_w
 
@@ -765,7 +765,7 @@ def SS_fsolve(guesses, params):
     if factor <= 0:
         error4 = 1e9
 
-    print 'errors: ', error1, error2, error3, error4
+    print('errors: ', error1, error2, error3, error4)
 
     return [error1, error2, error3, error4]
 
@@ -838,7 +838,7 @@ def SS_fsolve_reform(guesses, params):
         error3 = new_Y - Y
 
 
-    print 'errors: ', error1, error2, error3
+    print('errors: ', error1, error2, error3)
    # print 'factor prices: ', r, w
 
     # Check and punish violations
@@ -911,7 +911,7 @@ def SS_fsolve_reform_baselinespend(guesses, params):
     error2 = new_w - w
     error3 = new_Y - Y
 
-    print 'errors: ', error1, error2, error3
+    print('errors: ', error1, error2, error3)
    # print 'factor prices: ', r, w
 
     # Check and punish violations

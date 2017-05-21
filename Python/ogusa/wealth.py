@@ -24,10 +24,10 @@ This py-file creates the following other file(s):
 
 import numpy as np
 import pandas as pd
-import utils
+from . import utils
 import os
 from scipy import stats
-import cPickle as pickle
+import pickle as pickle
 
 cur_path = os.path.split(os.path.abspath(__file__))[0]
 WEALTH_DIR = os.path.join(cur_path, "data", "wealth")

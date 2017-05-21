@@ -195,7 +195,7 @@ def get_K(L, r, params):
     '''
 
     Z, gamma, epsilon, delta, tau_b, delta_tau = params
-    print 'USING firm.getK()'
+    print('USING firm.getK()')
     if epsilon == 1:
         K = ((1-tau_b)*gamma*Z/(r+delta-(tau_b*delta_tau)))**(1/(1-gamma)) * L
     elif epsilon == 0:
@@ -204,6 +204,6 @@ def get_K(L, r, params):
         K = (((1-gamma)**(1/(epsilon-1)))*((((((r+delta-(tau_b*delta_tau))/(1-tau_b))**(epsilon-1))*(gamma**((1-epsilon)/epsilon))
              *(Z**(1-epsilon)))-(gamma**(1/epsilon)))**(epsilon/(1-epsilon)))*L)
 
-    print 'USING firm.getK()'
+    print('USING firm.getK()')
 
     return K

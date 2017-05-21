@@ -220,10 +220,10 @@ def wealth_dist(year_start, year_end, S, J, path):
 
     '''intializing dataframe lists with SCF and SCF summary variable filenames''' 
     df_list = []
-    for i in xrange(len(year_list)):
+    for i in range(len(year_list)):
         df_list.append(pd.read_stata(path +filenames[i]+'.dta'))
     dfs_list = []
-    for i in xrange(len(year_list)):
+    for i in range(len(year_list)):
         dfs_list.append(pd.read_stata(path+summaryfiles[i]+'.dta'))
 
     '''set different income levels for the different ability types'''
@@ -332,10 +332,10 @@ def wealth_dist(year_start, year_end, S, J, path):
 
         Returns: total_bequest_matrix
         '''
-        age_income_matrix = [[[] for z in xrange(income_groups)] for x in xrange(len(age_groups))]
+        age_income_matrix = [[[] for z in range(income_groups)] for x in range(len(age_groups))]
         total_networth_mat = np.zeros((len(age_groups), income_groups))
         for i in age_groups:
-		  for j in xrange(income_groups):
+		  for j in range(income_groups):
     		    age_income_matrix[i-min_age][j] = age_income[(age_income['age']==i) & (age_income['income'] < income_levels[j+1]) & (age_income['income'] >= income_levels[j])]
     		    total_networth_mat[(i-min_age),j] = (age_income_matrix[i-min_age][j]['income'].sum())/(age_income_matrix[i-min_age][j]['income']).count()
     	return total_networth_mat
@@ -357,7 +357,7 @@ def wealth_dist(year_start, year_end, S, J, path):
 
     '''creating the matrix of all years combined''' 
     summed_total_networth = np.zeros((len(age_groups), income_groups))
-    for i in xrange(len(year_list)):
+    for i in range(len(year_list)):
         summed_total_networth += total_networth_matrix_list[i]
     all_years_networth = (summed_total_networth/float(len(year_list)))
     all_years_proportion = all_years_networth / all_years_networth.sum()
@@ -400,8 +400,8 @@ def Kbar_Eq(scale, Kbar, omega0, lambda0, wealth_dist):
 	S = len(omega0)
 	J = len(lambda0)
 	k_calc = 0
-	for s in xrange(S):
-		for j in xrange(J):
+	for s in range(S):
+		for j in range(J):
 			k_calc+= omega0[s]*lambda0[j]* scale*wealth_dist[j,s]
 	return Kbar-k_calc
 
@@ -445,8 +445,8 @@ def init_wealth(Kbar, omega0, lambda0, wealth_dist, scale_tol):
                       xtol=scale_tol)
 	wealth_init = scale * wealth_dist
 	k_calc = 0
-	for s in xrange(S):
-		for j in xrange(J):
+	for s in range(S):
+		for j in range(J):
 			k_calc+= omega0[s]*lambda0[j]* scale*wealth_dist[j,s]
 	return wealth_init, scale
 

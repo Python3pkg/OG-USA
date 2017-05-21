@@ -26,13 +26,13 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import cPickle as pickle
+import pickle as pickle
 import os
 
-import firm
-import household
+from . import firm
+from . import household
 
-import parameters
+from . import parameters
 parameters.DATASET = 'REAL'
 
 
@@ -78,18 +78,18 @@ def the_inequalizer(dist, pop_weights, ability_weights, S, J):
     sort_weights = flattened_weights[idx]
     cum_weights = np.cumsum(sort_weights)
     # variance
-    print np.var(np.log(dist * weights))
+    print(np.var(np.log(dist * weights)))
     # 90/10 ratio
     loc_90th = np.argmin(np.abs(cum_weights - .9))
     loc_10th = np.argmin(np.abs(cum_weights - .1))
-    print sort_dist[loc_90th] / sort_dist[loc_10th]
+    print(sort_dist[loc_90th] / sort_dist[loc_10th])
     # 10% ratio
-    print (sort_dist[loc_90th:] * sort_weights[loc_90th:]
-           ).sum() / (sort_dist * sort_weights).sum()
+    print((sort_dist[loc_90th:] * sort_weights[loc_90th:]
+           ).sum() / (sort_dist * sort_weights).sum())
     # 1% ratio
     loc_99th = np.argmin(np.abs(cum_weights - .99))
-    print (sort_dist[loc_99th:] * sort_weights[loc_99th:]
-           ).sum() / (sort_dist * sort_weights).sum()
+    print((sort_dist[loc_99th:] * sort_weights[loc_99th:]
+           ).sum() / (sort_dist * sort_weights).sum())
 
 '''
 ------------------------------------------------------------------------
@@ -172,7 +172,7 @@ the_inequalizer(income_init, omega_SS, lambdas, S, J)
 
 domain = np.linspace(starting_age, ending_age, S)
 Jgrid = np.zeros(J)
-for j in xrange(J):
+for j in range(J):
     Jgrid[j:] += lambdas[j]
 cmap1 = matplotlib.cm.get_cmap('summer')
 cmap2 = matplotlib.cm.get_cmap('jet')
@@ -640,7 +640,7 @@ wealth_model_tograph = factor_ss_init * bssmatinit[:76] / 1000000
 
 whichpercentile = [25, 50, 70, 80, 90, 99, 100]
 
-for j in xrange(J):
+for j in range(J):
     plt.figure()
     plt.plot(domain, wealth_data_tograph[:, j], label='Data')
     plt.plot(domain, wealth_model_tograph[:, j], label='Model', linestyle='--')

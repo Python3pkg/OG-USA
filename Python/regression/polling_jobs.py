@@ -23,7 +23,7 @@ def cli():
 
 
 def request(url, requests_method='get', **kwargs):
-    print('Request', url)
+    print(('Request', url))
     kw = dict(auth=HTTPBasicAuth('ospctaxbrain', OSPC_API_KEY), **kwargs)
     req = getattr(requests, requests_method)(url, **kw)
     content = req._content
@@ -59,11 +59,11 @@ def get_diff_files(reform):
                 fname = os.path.join(dirr, href)
                 with open(fname, 'w') as f:
                     f.write(content)
-                print('Wrote {}'.format(os.path.abspath(fname)))
+                print(('Wrote {}'.format(os.path.abspath(fname))))
 
 def is_started_finished(reform, build_num='lastBuild'):
     log = get_log(reform, build_num=build_num)
-    lines = filter(None, log.splitlines())
+    lines = [_f for _f in log.splitlines() if _f]
     if lines:
         first, last = lines[0], lines[-1]
     else:
@@ -92,9 +92,9 @@ def find_build_number(reform, max_wait=300,
                 try:
                     lines, started, finished = is_started_finished(reform, build_num)
                     if lines and BUILD_CAUSE.lower() in ' '.join(lines).lower():
-                        print('Found build number is {}'.format(build_num))
+                        print(('Found build number is {}'.format(build_num)))
                         break
-                    print('Failed to find build_num', build_num)
+                    print(('Failed to find build_num', build_num))
                     build_num = find_build_number(reform,
                                                   max_wait=max_wait,
                                                   build_num=build_num,
@@ -127,11 +127,11 @@ def get_results():
                 print('Polling...')
                 last_print = time.time()
             if not started:
-                print("WARNING: Expected started to be True - lines : {}".format('\n'.join(lines)))
+                print(("WARNING: Expected started to be True - lines : {}".format('\n'.join(lines))))
             if finished:
-                print('REFORM FINISHED: {}'.format(reform))
+                print(('REFORM FINISHED: {}'.format(reform)))
                 reforms_outstanding.remove(reform)
-                print('Waiting on {}'.format(reforms_outstanding))
+                print(('Waiting on {}'.format(reforms_outstanding)))
                 log_dir = os.path.join('artifacts', reform)
                 if not os.path.exists(log_dir):
                     os.makedirs(log_dir)
@@ -141,7 +141,7 @@ def get_results():
                 time.sleep(poll)
             poll = (3 * poll + POLL_INTERVAL) / 4 # gradually up to POLL_INTERVAL
     for reform in args.reforms:
-        print('Get diff / results files for {}'.format(reform))
+        print(('Get diff / results files for {}'.format(reform)))
         get_diff_files(reform)
 
     results_data_files = []
@@ -151,7 +151,7 @@ def get_results():
             if 'pprint' in f:
                 with open(f) as f2:
                     content = f2.read()
-                print('From artifact {}:\n\n{}\n\n'.format(f, content))
+                print(('From artifact {}:\n\n{}\n\n'.format(f, content)))
             if f.startswith('results_data') and f.endswith('.csv'):
                 results_data_files.append(f)
     if not os.path.exists('artifacts'):

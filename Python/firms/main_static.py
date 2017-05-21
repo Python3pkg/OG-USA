@@ -218,31 +218,31 @@ GoodGuess, r_cstr_ss, w_cstr_ss, c_tilde_cstr_ss, c_cstr_ss, K_cstr_ss \
     gamma, epsilon, delta, pi, I, S, n)
 
 if r_cstr_ss == True and w_cstr_ss == True:
-    print 'Initial guess is not feasible because both r + delta, w <= 0.'
+    print('Initial guess is not feasible because both r + delta, w <= 0.')
 elif r_cstr_ss == True and w_cstr_ss == False:
-    print 'Initial guess is not feasible because r + delta <= 0.'
+    print('Initial guess is not feasible because r + delta <= 0.')
 elif r_cstr_ss == False and w_cstr_ss == True:
-    print 'Initial guess is not feasible because w <= 0.'
+    print('Initial guess is not feasible because w <= 0.')
 elif (r_cstr_ss == False and w_cstr_ss == False and c_tilde_cstr_ss.max() == 1
   and K_cstr_ss == False):
-    print 'Initial guess is not feasible because c_tilde_{s}<=0 for some s.'
+    print('Initial guess is not feasible because c_tilde_{s}<=0 for some s.')
 elif (r_cstr_ss == False and w_cstr_ss == False and c_tilde_cstr_ss.max() == 1
   and K_cstr_ss == True):
-    print 'Initial guess is not feasible because c_tilde_{s}<=0 for some s and sum of K_{m}<=0.'
+    print('Initial guess is not feasible because c_tilde_{s}<=0 for some s and sum of K_{m}<=0.')
 elif (r_cstr_ss == False and w_cstr_ss == False and c_tilde_cstr_ss.max() == 0
   and c_cstr_ss.max() == 1 and K_cstr_ss == False):
-    print 'Initial guess is not feasible because c_{i,s}<=0 for some i and s.'
+    print('Initial guess is not feasible because c_{i,s}<=0 for some i and s.')
 elif (r_cstr_ss == False and w_cstr_ss == False and c_tilde_cstr_ss.max() == 0
   and c_cstr_ss.max() == 1 and K_cstr_ss == True):
-    print 'Initial guess is not feasible because c_{i,s}<=0 for some i and s and sum of K_{m}<=0.'
+    print('Initial guess is not feasible because c_{i,s}<=0 for some i and s and sum of K_{m}<=0.')
 elif (r_cstr_ss == False and w_cstr_ss == False and c_tilde_cstr_ss.max() == 0
   and c_cstr_ss.max() == 0 and K_cstr_ss == True):
-    print 'Initial guess is not feasible because sum of K_{m}<=0.'
+    print('Initial guess is not feasible because sum of K_{m}<=0.')
 elif GoodGuess == True:
-    print 'Initial guess is feasible.'
+    print('Initial guess is feasible.')
 
     # Compute steady state
-    print 'BEGIN STEADY STATE COMPUTATION'
+    print('BEGIN STEADY STATE COMPUTATION')
     ss_params = (S, alpha, beta, sigma, ss_tol)
     (r_ss, w_ss, p_c_ss, p_tilde_ss, b_ss, c_tilde_ss, c_ss, eul_ss, C_ss, X_ss,
         K_ss, L_ss, MCK_err_ss, MCL_err_ss, ss_time) = \
@@ -250,44 +250,44 @@ elif GoodGuess == True:
         gamma, epsilon, delta, xi, pi, I, M, S, n, ss_graphs)
 
     # Print diagnostics
-    print 'The maximum absolute steady-state Euler error is: ', \
-        np.absolute(eul_ss).max()
-    print 'The capital and labor market clearing errors are: ', \
-        (MCK_err_ss, MCL_err_ss)
-    print 'The steady-state distribution of capital is:'
-    print b_ss
-    print 'The steady-state distribution of composite consumption is:'
-    print c_tilde_ss
-    print 'The steady-state distribution of goods consumption is:'
-    print c_ss
-    print 'The steady-state interest rate and wage:'
-    print np.array([r_ss, w_ss])
-    print 'Steady-state consumption good prices and composite price are:'
-    print p_c_ss, p_tilde_ss
-    print 'Aggregate output, capital stock and consumption for each industry/consumption good are:'
-    print np.array([[X_ss], [K_ss], [C_ss]])
+    print('The maximum absolute steady-state Euler error is: ', \
+        np.absolute(eul_ss).max())
+    print('The capital and labor market clearing errors are: ', \
+        (MCK_err_ss, MCL_err_ss))
+    print('The steady-state distribution of capital is:')
+    print(b_ss)
+    print('The steady-state distribution of composite consumption is:')
+    print(c_tilde_ss)
+    print('The steady-state distribution of goods consumption is:')
+    print(c_ss)
+    print('The steady-state interest rate and wage:')
+    print(np.array([r_ss, w_ss]))
+    print('Steady-state consumption good prices and composite price are:')
+    print(p_c_ss, p_tilde_ss)
+    print('Aggregate output, capital stock and consumption for each industry/consumption good are:')
+    print(np.array([[X_ss], [K_ss], [C_ss]]))
     RCdiff_ss = X_ss - (np.dot(np.reshape(C_ss,(1,I)),pi)) - (np.dot(delta*K_ss,xi)) 
-    print 'The difference in the resource constraints are: ', RCdiff_ss
+    print('The difference in the resource constraints are: ', RCdiff_ss)
 
     # Print SS computation time
     if ss_time < 60: # seconds
         secs = round(ss_time, 3)
-        print 'SS computation time: ', secs, ' sec'
+        print('SS computation time: ', secs, ' sec')
     elif ss_time >= 60 and ss_time < 3600: # minutes
         mins = int(ss_time / 60)
         secs = round(((ss_time / 60) - mins) * 60, 1)
-        print 'SS computation time: ', mins, ' min, ', secs, ' sec'
+        print('SS computation time: ', mins, ' min, ', secs, ' sec')
     elif ss_time >= 3600 and ss_time < 86400: # hours
         hrs = int(ss_time / 3600)
         mins = int(((ss_time / 3600) - hrs) * 60)
         secs = round(((ss_time / 60) - mins) * 60, 1)
-        print 'SS computation time: ', hrs, ' hrs, ', mins, ' min, ', secs, ' sec'
+        print('SS computation time: ', hrs, ' hrs, ', mins, ' min, ', secs, ' sec')
     elif ss_time >= 86400: # days
         days = int(ss_time / 86400)
         hrs = int(((ss_time / 86400) - days) * 24)
         mins = int(((ss_time / 3600) - hrs) * 60)
         secs = round(((ss_time / 60) - mins) * 60, 1)
-        print 'SS computation time: ', days, ' days,', hrs, ' hrs, ', mins, ' min, ', secs, ' sec'
+        print('SS computation time: ', days, ' days,', hrs, ' hrs, ', mins, ' min, ', secs, ' sec')
 
     '''
     --------------------------------------------------------------------
@@ -366,12 +366,12 @@ elif GoodGuess == True:
     --------------------------------------------------------------------
     '''
     if tp_solve == True:
-        print 'BEGIN EQUILIBRIUM TIME PATH COMPUTATION'
+        print('BEGIN EQUILIBRIUM TIME PATH COMPUTATION')
         #Gamma1 = b_ss
         Gamma1 = 0.95 * b_ss
         # Make sure initial savings distr. is feasible (sum of b_{s}>0)
         if Gamma1.sum() <= 0:
-            print 'Initial savings distribution is not feasible (sum of b_{s}<=0)'
+            print('Initial savings distribution is not feasible (sum of b_{s}<=0)')
         else:
             # Choose initial guesses of path of interest rate and wage.
             # Use parabola specification aa*x^2 + bb*x + cc
@@ -434,10 +434,10 @@ elif GoodGuess == True:
 
 
             # Print diagnostics
-            print 'The max. absolute difference in the resource constraints are:'
-            print np.absolute(RCdiff_path).max(axis=1)
-            print 'The max. absolute error in the market clearing conditions are:'
-            print np.absolute(MCKerr_path).max(), np.absolute(MCLerr_path).max()
+            print('The max. absolute difference in the resource constraints are:')
+            print(np.absolute(RCdiff_path).max(axis=1))
+            print('The max. absolute error in the market clearing conditions are:')
+            print(np.absolute(MCKerr_path).max(), np.absolute(MCLerr_path).max())
 
 
 
@@ -445,21 +445,21 @@ elif GoodGuess == True:
             # Print TPI computation time
             if tpi_time < 60: # seconds
                 secs = round(tpi_time, 3)
-                print 'TPI computation time: ', secs, ' sec'
+                print('TPI computation time: ', secs, ' sec')
             elif tpi_time >= 60 and tpi_time < 3600: # minutes
                 mins = int(tpi_time / 60)
                 secs = round(((tpi_time / 60) - mins) * 60, 1)
-                print 'TPI computation time: ', mins, ' min, ', secs, ' sec'
+                print('TPI computation time: ', mins, ' min, ', secs, ' sec')
             elif tpi_time >= 3600 and tpi_time < 86400: # hours
                 hrs = int(tpi_time / 3600)
                 mins = int(((tpi_time / 3600) - hrs) * 60)
                 secs = round(((tpi_time / 60) - mins) * 60, 1)
-                print 'TPI computation time: ', hrs, ' hrs, ', mins, ' min, ', secs, ' sec'
+                print('TPI computation time: ', hrs, ' hrs, ', mins, ' min, ', secs, ' sec')
             elif tpi_time >= 86400: # days
                 days = int(tpi_time / 86400)
                 hrs = int(((tpi_time / 86400) - days) * 24)
                 mins = int(((tpi_time / 3600) - hrs) * 60)
                 secs = round(((tpi_time / 60) - mins) * 60, 1)
-                print 'TPI computation time: ', days, ' days,', hrs, ' hrs, ', mins, ' min, ', secs, ' sec'
+                print('TPI computation time: ', days, ' days,', hrs, ' hrs, ', mins, ' min, ', secs, ' sec')
 
 

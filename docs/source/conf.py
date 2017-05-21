@@ -43,8 +43,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'OSPC Dynamic'
-copyright = u'2015, OSPC'
+project = 'OSPC Dynamic'
+copyright = '2015, OSPC'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -196,8 +196,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'OSPCDynamic.tex', u'OSPC Dynamic Documentation',
-   u'OSPC', 'manual'),
+  ('index', 'OSPCDynamic.tex', 'OSPC Dynamic Documentation',
+   'OSPC', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -226,8 +226,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'ospcdynamic', u'OSPC Dynamic Documentation',
-     [u'OSPC'], 1)
+    ('index', 'ospcdynamic', 'OSPC Dynamic Documentation',
+     ['OSPC'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -240,8 +240,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'OSPCDynamic', u'OSPC Dynamic Documentation',
-   u'OSPC', 'OSPCDynamic', 'One line description of project.',
+  ('index', 'OSPCDynamic', 'OSPC Dynamic Documentation',
+   'OSPC', 'OSPCDynamic', 'One line description of project.',
    'Miscellaneous'),
 ]
 

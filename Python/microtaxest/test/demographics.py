@@ -461,7 +461,7 @@ def get_omega(S, T, starting_age, ending_age, E, flag_graphs):
     children = np.tile(children.reshape(1, E), (T + S, 1))
     omega_big = np.tile(new_omega.reshape(1, S), (T + S, 1))
     # Generate the time path for each age group
-    for t in xrange(1, T + S):
+    for t in range(1, T + S):
         # Children are born and then have to wait 20 years to enter the model
         omega_big[t, 0] = children[t-1, -1] * (children_rate[-1] + children_im[-1])
         omega_big[t, 1:] = omega_big[t-1, :-1] * (surv_array[:-1] + imm_array[:-1])

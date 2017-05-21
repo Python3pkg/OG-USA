@@ -40,7 +40,7 @@ def run_micro_macro(user_params):
 
     time.sleep(0.5)
 
-    print "total time for policy run was ", (time.time() - start_time)
+    print("total time for policy run was ", (time.time() - start_time))
 
 
 if __name__ == "__main__":

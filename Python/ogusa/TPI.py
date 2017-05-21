@@ -27,14 +27,14 @@ This py-file creates the following other file(s):
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-import cPickle as pickle
+import pickle as pickle
 import scipy.optimize as opt
 
-import tax
-import utils
-import household
-import firm
-import fiscal
+from . import tax
+from . import utils
+from . import household
+from . import firm
+from . import fiscal
 import os
 import csv
 
@@ -410,13 +410,13 @@ def inner_loop(guesses, outer_loop_vars, params):
     n_mat = np.zeros((T + S, S, J))
     euler_errors = np.zeros((T, 2 * S, J))
 
-    for j in xrange(J):
+    for j in range(J):
             first_doughnut_params = (income_tax_params, tpi_params, initial_b)
             b_mat[0, -1, j], n_mat[0, -1, j] = np.array(opt.fsolve(firstdoughnutring, [guesses_b[0, -1, j], guesses_n[0, -1, j]],
                                                                    args=(r[0], w[0], initial_b, BQ[0, j], T_H[0], j,
                                                                    first_doughnut_params), xtol=MINIMIZER_TOL))
 
-            for s in xrange(S - 2):  # Upper triangle
+            for s in range(S - 2):  # Upper triangle
                 ind2 = np.arange(s + 2)
                 b_guesses_to_use = np.diag(
                     guesses_b[:S, :, j], S - (s + 2))
@@ -446,7 +446,7 @@ def inner_loop(guesses, outer_loop_vars, params):
                 n_mat[ind2, S - (s + 2) + ind2, j] = n_vec
 
 
-            for t in xrange(0, T):
+            for t in range(0, T):
                 # b_guesses_to_use = .75 * \
                 #     np.diag(guesses_b[t + 1:t + S + 1, :, j])
                 b_guesses_to_use = .75 * \
@@ -521,7 +521,7 @@ def run_TPI(income_tax_params, tpi_params, iterative_params, small_open_params, 
     else:
         budget_balance, ALPHA_T, ALPHA_G, tG1, tG2, rho_G, debt_ratio_ss, T_Hbaseline, Gbaseline = fiscal_params
 
-    print 'Government spending breakpoints are tG1: ', tG1, '; and tG2:', tG2
+    print('Government spending breakpoints are tG1: ', tG1, '; and tG2:', tG2)
 
     TPI_FIG_DIR = output_dir
     # Initialize guesses at time paths
@@ -578,7 +578,7 @@ def run_TPI(income_tax_params, tpi_params, iterative_params, small_open_params, 
     BQ = np.zeros((T + S, J))
     BQ0_params = (omega_S_preTP.reshape(S, 1), lambdas, rho.reshape(S, 1), g_n_vector[0], 'SS')
     BQ0 = household.get_BQ(r[0], initial_b, BQ0_params)
-    for j in xrange(J):
+    for j in range(J):
         BQ[:, j] = list(np.linspace(BQ0[j], BQss[j], T)) + [BQss[j]] * S
     BQ = np.array(BQ)
     if budget_balance:
@@ -625,7 +625,7 @@ def run_TPI(income_tax_params, tpi_params, iterative_params, small_open_params, 
     euler_errors = np.zeros((T, 2 * S, J))
     TPIdist_vec = np.zeros(maxiter)
 
-    print 'analytical mtrs in tpi = ', analytical_mtrs
+    print('analytical mtrs in tpi = ', analytical_mtrs)
 
 
     while (TPIiter < maxiter) and (TPIdist >= mindist_TPI):
@@ -643,11 +643,11 @@ def run_TPI(income_tax_params, tpi_params, iterative_params, small_open_params, 
             plt.savefig(os.path.join(TPI_FIG_DIR, "TPI_D"))
 
         if report_tG1 is True:
-            print '\tAt time tG1-1:'
-            print '\t\tG = ', G[tG1-1]
-            print '\t\tK = ', K[tG1-1]
-            print '\t\tr = ', r[tG1-1]
-            print '\t\tD = ', D[tG1-1]
+            print('\tAt time tG1-1:')
+            print('\t\tG = ', G[tG1-1])
+            print('\t\tK = ', K[tG1-1])
+            print('\t\tr = ', r[tG1-1])
+            print('\t\tD = ', D[tG1-1])
 
 
         guesses = (guesses_b, guesses_n)
@@ -668,8 +668,8 @@ def run_TPI(income_tax_params, tpi_params, iterative_params, small_open_params, 
         #B_params = (omega[:T-1].reshape(T-1, S, 1), lambdas.reshape(1, 1, J), imm_rates[:T-1].reshape(T-1,S,1), g_n_vector[1:T], 'TPI') # defined above
         B[1:T] = household.get_K(bmat_splus1[:T-1], B_params)
         if np.any(B) < 0:
-            print 'B has negative elements. B[0:9]:', B[0:9]
-            print 'B[T-2:T]:', B[T-2,T]
+            print('B has negative elements. B[0:9]:', B[0:9])
+            print('B[T-2:T]:', B[T-2,T])
 
         if small_open == False:
             if budget_balance:
@@ -695,7 +695,7 @@ def run_TPI(income_tax_params, tpi_params, iterative_params, small_open_params, 
                 Dnew, G = fiscal.D_G_path(dg_fixed_values, fiscal_params, other_dg_params, baseline_spending=baseline_spending)
                 K[:T] = B[:T] - Dnew[:T]
                 if np.any(K < 0):
-                    print 'K has negative elements. Setting them positive to prevent NAN.'
+                    print('K has negative elements. Setting them positive to prevent NAN.')
                     K[:T] = np.fmax(K[:T], 0.05*B[:T])
         else:
             # K_params previously set to =  (Z, gamma, epsilon, delta, tau_b, delta_tau)
@@ -711,7 +711,7 @@ def run_TPI(income_tax_params, tpi_params, iterative_params, small_open_params, 
         else:
             rnew = r.copy()
 
-        print 'Y and T_H: ', Y[3], T_H[3]
+        print('Y and T_H: ', Y[3], T_H[3])
 #        omega_shift = np.append(omega_S_preTP.reshape(1,S),omega[:T-1,:],axis=0)  # defined above
 #        BQ_params = (omega_shift.reshape(T, S, 1), lambdas.reshape(1, 1, J), rho.reshape(1, S, 1),
 #                     g_n_vector[:T].reshape(T, 1), 'TPI')  # defined above
@@ -753,10 +753,10 @@ def run_TPI(income_tax_params, tpi_params, iterative_params, small_open_params, 
         guesses_b = utils.convex_combo(b_mat, guesses_b, nu)
         guesses_n = utils.convex_combo(n_mat, guesses_n, nu)
 
-        print 'r diff: ', (rnew[:T]-r[:T]).max(), (rnew[:T]-r[:T]).min()
-        print 'w diff: ', (wnew[:T]-w[:T]).max(), (wnew[:T]-w[:T]).min()
-        print 'BQ diff: ', (BQnew[:T]-BQ[:T]).max(), (BQnew[:T]-BQ[:T]).min()
-        print 'T_H diff: ', (T_H_new[:T]-T_H[:T]).max(), (T_H_new[:T]-T_H[:T]).min()
+        print('r diff: ', (rnew[:T]-r[:T]).max(), (rnew[:T]-r[:T]).min())
+        print('w diff: ', (wnew[:T]-w[:T]).max(), (wnew[:T]-w[:T]).min())
+        print('BQ diff: ', (BQnew[:T]-BQ[:T]).max(), (BQnew[:T]-BQ[:T]).min())
+        print('T_H diff: ', (T_H_new[:T]-T_H[:T]).max(), (T_H_new[:T]-T_H[:T]).min())
 
         if baseline_spending==False:
             if T_H.all() != 0:
@@ -780,8 +780,8 @@ def run_TPI(income_tax_params, tpi_params, iterative_params, small_open_params, 
         #         nu /= 2
         #         print 'New Value of nu:', nu
         TPIiter += 1
-        print 'Iteration:', TPIiter
-        print '\tDistance:', TPIdist
+        print('Iteration:', TPIiter)
+        print('\tDistance:', TPIdist)
 
         # print 'D/Y:', (D[:T]/Ynew[:T]).max(), (D[:T]/Ynew[:T]).min(), np.median(D[:T]/Ynew[:T])
         # print 'T/Y:', (T_H_new[:T]/Ynew[:T]).max(), (T_H_new[:T]/Ynew[:T]).min(), np.median(T_H_new[:T]/Ynew[:T])
@@ -831,7 +831,7 @@ def run_TPI(income_tax_params, tpi_params, iterative_params, small_open_params, 
     # testing for change in Y
     ydiff = Ynew[:T] - Y[:T]
     ydiff_max = np.amax(np.abs(ydiff))
-    print 'ydiff_max = ', ydiff_max
+    print('ydiff_max = ', ydiff_max)
 
     w_params = (Z, gamma, epsilon)
     wnew = firm.get_w(Ynew[:T], L[:T], w_params)
@@ -897,10 +897,10 @@ def run_TPI(income_tax_params, tpi_params, iterative_params, small_open_params, 
         #print 'Y(T-1):', Y[T-1], '\n','C(T-1):', C[T-1], '\n','K(T-1):', K[T-1], '\n','B(T-1):', B[T-1], '\n','BI(T-1):', BI[T-1], '\n','I(T-1):', I[T-1]
 
     rce_max = np.amax(np.abs(rc_error))
-    print 'Max absolute value resource constraint error:', rce_max
+    print('Max absolute value resource constraint error:', rce_max)
 
-    print'Checking time path for violations of constraints.'
-    for t in xrange(T):
+    print('Checking time path for violations of constraints.')
+    for t in range(T):
         household.constraint_checker_TPI(
             b_mat[t], n_mat[t], c_path[t], t, ltilde)
 
@@ -955,7 +955,7 @@ def run_TPI(income_tax_params, tpi_params, iterative_params, small_open_params, 
 
 
     if np.any(G) < 0:
-        print 'Government spending is negative along transition path to satisfy budget'
+        print('Government spending is negative along transition path to satisfy budget')
 
     if ((TPIiter >= maxiter) or (np.absolute(TPIdist) > mindist_TPI)) and ENFORCE_SOLUTION_CHECKS :
         raise RuntimeError("Transition path equlibrium not found (TPIdist)")

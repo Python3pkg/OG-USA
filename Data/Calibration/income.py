@@ -118,7 +118,7 @@ def get_e_indiv(S, J, data, starting_age, ending_age, bin_weights):
     age_groups = np.linspace(starting_age, temp_ending_age, 51)
     e = np.zeros((50, J))
     data = data[(starting_age <= data.age) & (data.age <= temp_ending_age)]
-    for i in xrange(50):
+    for i in range(50):
         incomes = data[(age_groups[i] <= data.age) & (
             data.age < age_groups[i+1])]
         incomes = incomes.sort(['wage'])
@@ -126,7 +126,7 @@ def get_e_indiv(S, J, data, starting_age, ending_age, bin_weights):
         wgt_ar = np.array(incomes.wgt)
         wgt_cum = np.zeros(inc.shape[0])
         cum_weight_scalar = 0
-        for k in xrange(inc.shape[0]):
+        for k in range(inc.shape[0]):
             cum_weight_scalar += wgt_ar[k]
             wgt_cum[k] = cum_weight_scalar
         total_wgts = wgt_cum[-1]
@@ -139,11 +139,11 @@ def get_e_indiv(S, J, data, starting_age, ending_age, bin_weights):
                     wgt_cum[ind] < total_wgts * percentile[j]):
                 ind += 1
             indicies[j+1] = ind
-        for j in xrange(J):
+        for j in range(J):
             e[i, j] = np.mean(inc[indicies[j]:indicies[j+1]])
     e /= e.mean()
     new_e = np.empty((S, J))
-    for j in xrange(J):
+    for j in range(J):
         func = poly.polyfit(np.arange(50)+starting_age, e[:50, j], deg=2)
         new_e[:, j] = integrate(func, np.linspace(
             starting_age, ending_age, S+1), percentile[j])
@@ -154,7 +154,7 @@ def get_e_indiv(S, J, data, starting_age, ending_age, bin_weights):
 def graph_income(S, J, e, starting_age, ending_age, bin_weights):
     domain = np.linspace(starting_age, ending_age, S)
     Jgrid = np.zeros(J)
-    for j in xrange(J):
+    for j in range(J):
         Jgrid[j:] += bin_weights[j]
     X, Y = np.meshgrid(domain, Jgrid)
     if J == 1:

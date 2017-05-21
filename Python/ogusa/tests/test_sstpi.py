@@ -4,7 +4,7 @@ CUR_PATH = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.join(CUR_PATH, "../../"))
 import pytest
 import tempfile
-import cPickle as pickle
+import pickle as pickle
 import numpy as np
 import os
 
@@ -44,7 +44,7 @@ def test_sstpi():
     import pickle
     import numpy as np
     import numpy as np
-    import cPickle as pickle
+    import pickle as pickle
     import os
 
     import ogusa
@@ -152,8 +152,8 @@ def test_sstpi():
 
     # compare results to test data
     for old, new in zip(oldfiles, newfiles):
-        print "trying a pair"
-        print old, new
+        print("trying a pair")
+        print(old, new)
         assert pickle_file_compare(
             old, new, exceptions=exceptions, relative=True)
-        print "next pair"
+        print("next pair")

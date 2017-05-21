@@ -58,7 +58,7 @@ Authors
 
 # Stdlib
 import ast
-import cStringIO
+import io
 import os
 import re
 import sys
@@ -90,7 +90,7 @@ from pdb import set_trace
 # Globals
 #-----------------------------------------------------------------------------
 # for tokenizing blocks
-COMMENT, INPUT, OUTPUT = range(3)
+COMMENT, INPUT, OUTPUT = list(range(3))
 
 #-----------------------------------------------------------------------------
 # Functions and class declarations
@@ -194,7 +194,7 @@ class EmbeddedSphinxShell(object):
 
     def __init__(self):
 
-        self.cout = cStringIO.StringIO()
+        self.cout = io.StringIO()
 
         # Create config object for IPython
         config = Config()
@@ -493,7 +493,7 @@ class EmbeddedSphinxShell(object):
                     multiline = True
                     cont_len = len(str(lineno)) + 2
                     line_to_process = line.strip('\\')
-                    output.extend([u"%s %s" % (fmtin%lineno,line)])
+                    output.extend(["%s %s" % (fmtin%lineno,line)])
                     continue
                 else: # no we're still not
                     line_to_process = line.strip('\\')
@@ -501,12 +501,12 @@ class EmbeddedSphinxShell(object):
                 line_to_process += line.strip('\\')
                 if line_stripped.endswith('\\'): # and we still are
                     continuation = '.' * cont_len
-                    output.extend([(u'   %s: '+line_stripped) % continuation])
+                    output.extend([('   %s: '+line_stripped) % continuation])
                     continue
                 # else go ahead and run this multiline then carry on
 
             # get output of line
-            self.process_input_line(unicode(line_to_process.strip()),
+            self.process_input_line(str(line_to_process.strip()),
                                     store_history=False)
             out_line = self.cout.getvalue()
             self.clear_cout()
@@ -520,15 +520,15 @@ class EmbeddedSphinxShell(object):
 
             # line numbers don't actually matter, they're replaced later
             if not multiline:
-                in_line = u"%s %s" % (fmtin%lineno,line)
+                in_line = "%s %s" % (fmtin%lineno,line)
 
                 output.extend([in_line])
             else:
-                output.extend([(u'   %s: '+line_stripped) % continuation])
+                output.extend([('   %s: '+line_stripped) % continuation])
                 multiline = False
             if len(out_line):
                 output.extend([out_line])
-            output.extend([u''])
+            output.extend([''])
 
         return output
 
@@ -570,19 +570,19 @@ class EmbeddedSphinxShell(object):
                 output.extend([line])
                 continue
 
-            continuation  = u'   %s:'% ''.join(['.']*(len(str(ct))+2))
+            continuation  = '   %s:'% ''.join(['.']*(len(str(ct))+2))
             if not multiline:
-                modified = u"%s %s" % (fmtin % ct, line_stripped)
+                modified = "%s %s" % (fmtin % ct, line_stripped)
                 output.append(modified)
                 ct += 1
                 try:
                     ast.parse(line_stripped)
-                    output.append(u'')
+                    output.append('')
                 except Exception:
                     multiline = True
                     multiline_start = lineno
             else:
-                modified = u'%s %s' % (continuation, line)
+                modified = '%s %s' % (continuation, line)
                 output.append(modified)
 
                 try:
@@ -594,7 +594,7 @@ class EmbeddedSphinxShell(object):
 
                         continue
 
-                    output.extend([continuation, u''])
+                    output.extend([continuation, ''])
                     multiline = False
                 except Exception:
                     pass
@@ -728,7 +728,7 @@ class IpythonDirective(Directive):
         #print lines
         if len(lines)>2:
             if debug:
-                print '\n'.join(lines)
+                print('\n'.join(lines))
             else: #NOTE: this raises some errors, what's it for?
                 #print 'INSERTING %d lines'%len(lines)
                 self.state_machine.insert_input(
@@ -906,4 +906,4 @@ if __name__=='__main__':
     if not os.path.isdir('_static'):
         os.mkdir('_static')
     test()
-    print 'All OK? Check figures in _static/'
+    print('All OK? Check figures in _static/')

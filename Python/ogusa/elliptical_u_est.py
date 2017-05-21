@@ -19,7 +19,7 @@ import numpy as np
 import numpy.random as rnd
 import scipy.optimize as opt
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except:
     import pickle
 import pandas as pd

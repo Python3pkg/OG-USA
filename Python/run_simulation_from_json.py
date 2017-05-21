@@ -18,7 +18,7 @@ Import Packages
 '''
 
 import numpy as np
-import cPickle as pickle
+import pickle as pickle
 import os
 import time
 import scipy.optimize as opt
@@ -167,7 +167,7 @@ quit()
 # # w_path = guesses[T:2*T].reshape(T)
 # # T_H_path = guesses[2*T:3*T].reshape(T)
 # # BQ_path = guesses[3*T:].reshape(T,J)
-print 'finished'
+print('finished')
 
 
 '''

@@ -52,8 +52,8 @@ class industry:
 #        counter = [0]*columns
         levels = [None]*columns
         self.sub_ind = [] #[None]*len(dummy.iloc[:,0].value_counts())
-        for i in xrange(0, rows):
-            for j in xrange(0, columns):
+        for i in range(0, rows):
+            for j in range(0, columns):
                 #print(str(i) + ", " + str(j))
                 if(dummy.iloc[i,j] != 0):
 #                    print(str(i) + ", " + str(j))
@@ -68,7 +68,7 @@ class industry:
                         levels[j-1].sub_ind.append(levels[j])
                     if(j == 0):
                         self.sub_ind.append(levels[j])
-                    for k in xrange(j+1, columns):
+                    for k in range(j+1, columns):
 #                        counter[k] = 0
                         levels[k] = None
                     #print levels

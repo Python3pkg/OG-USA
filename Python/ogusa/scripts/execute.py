@@ -3,7 +3,7 @@ A 'smoke test' for the ogusa package. Uses a fake data set to run the
 baseline
 '''
 
-import cPickle as pickle
+import pickle as pickle
 import os
 import numpy as np
 import time
@@ -25,10 +25,10 @@ def runner(output_base, baseline_dir, test=False, time_path=True, baseline=False
     
     # Make sure options are internally consistent
     if baseline==True and baseline_spending==True:
-        print 'Inconsistent options. Setting <baseline_spending> to False, leaving <baseline> True.'
+        print('Inconsistent options. Setting <baseline_spending> to False, leaving <baseline> True.')
         baseline_spending = False
     if budget_balance==True and baseline_spending==True:
-        print 'Inconsistent options. Setting <baseline_spending> to False, leaving <budget_balance> True.'
+        print('Inconsistent options. Setting <baseline_spending> to False, leaving <budget_balance> True.')
         baseline_spending = False
 
     #Create output directory structure
@@ -38,7 +38,7 @@ def runner(output_base, baseline_dir, test=False, time_path=True, baseline=False
     dirs = [saved_moments_dir, ss_dir, tpi_dir]
     for _dir in dirs:
         try:
-            print "making dir: ", _dir
+            print("making dir: ", _dir)
             os.makedirs(_dir)
         except OSError as oe:
             pass
@@ -46,7 +46,7 @@ def runner(output_base, baseline_dir, test=False, time_path=True, baseline=False
     if run_micro:
         txfunc.get_tax_func_estimate(baseline=baseline, analytical_mtrs=analytical_mtrs, age_specific=age_specific,
                                      start_year=user_params['start_year'], reform=reform, guid=guid)
-    print 'In runner, baseline is ', baseline
+    print('In runner, baseline is ', baseline)
     run_params = ogusa.parameters.get_parameters(test=test, baseline=baseline, guid=guid)
     run_params['analytical_mtrs'] = analytical_mtrs
     run_params['small_open'] = small_open
@@ -54,7 +54,7 @@ def runner(output_base, baseline_dir, test=False, time_path=True, baseline=False
 
     # Modify ogusa parameters based on user input
     if 'frisch' in user_params:
-        print "updating frisch and associated"
+        print("updating frisch and associated")
         b_ellipse, upsilon = ogusa.elliptical_u_est.estimation(user_params['frisch'],
                                                                run_params['ltilde'])
         run_params['b_ellipse'] = b_ellipse
@@ -65,7 +65,7 @@ def runner(output_base, baseline_dir, test=False, time_path=True, baseline=False
 
     # Modify ogusa parameters based on user input
     if 'g_y_annual' in user_params:
-        print "updating g_y_annual and associated"
+        print("updating g_y_annual and associated")
         ending_age = run_params['ending_age']
         starting_age = run_params['starting_age']
         S = run_params['S']
@@ -76,12 +76,12 @@ def runner(output_base, baseline_dir, test=False, time_path=True, baseline=False
     # Modify transfer & spending ratios based on user input.
     if 'T_shifts' in user_params:
         if baseline_spending==False:
-            print 'updating ALPHA_T with T_shifts in first', user_params['T_shifts'].size, 'periods.'                                            
+            print('updating ALPHA_T with T_shifts in first', user_params['T_shifts'].size, 'periods.')                                            
             T_shifts = np.concatenate((user_params['T_shifts'], np.zeros(run_params['ALPHA_T'].size - user_params['T_shifts'].size)), axis=0)
             run_params['ALPHA_T'] = run_params['ALPHA_T'] + T_shifts
     if 'G_shifts' in user_params:
         if baseline_spending==False:
-            print 'updating ALPHA_G with G_shifts in first', user_params['G_shifts'].size, 'periods.'                                            
+            print('updating ALPHA_G with G_shifts in first', user_params['G_shifts'].size, 'periods.')                                            
             G_shifts = np.concatenate((user_params['G_shifts'], np.zeros(run_params['ALPHA_G'].size - user_params['G_shifts'].size)), axis=0)
             run_params['ALPHA_G'] = run_params['ALPHA_G'] + G_shifts
 
@@ -170,5 +170,5 @@ def runner(output_base, baseline_dir, test=False, time_path=True, baseline=False
         pickle.dump(macro_output, open(tpi_vars, "wb"))
 
 
-        print "Time path iteration complete."
-    print "It took {0} seconds to get that part done.".format(time.time() - tick)
+        print("Time path iteration complete.")
+    print("It took {0} seconds to get that part done.".format(time.time() - tick))

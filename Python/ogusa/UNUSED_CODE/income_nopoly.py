@@ -78,7 +78,7 @@ def exp_fit(e_input, S, J):
     params_guess = [20, 1]
     e_output = np.zeros((S, J))
     e_output[:50, :] = e_input
-    for j in xrange(J):
+    for j in range(J):
         meanslope = np.mean([e_input[-1, j]-e_input[-2, j], e_input[
             -2, j]-e_input[-3, j], e_input[-3, j]-e_input[-4, j]])
         slope = np.min([meanslope, -.01])
@@ -95,7 +95,7 @@ def graph_income(S, J, e, starting_age, ending_age, bin_weights):
     e_tograph = np.log(e)
     domain = np.linspace(starting_age, ending_age, S)
     Jgrid = np.zeros(J)
-    for j in xrange(J):
+    for j in range(J):
         Jgrid[j:] += bin_weights[j]
     X, Y = np.meshgrid(domain, Jgrid)
     cmap2 = matplotlib.cm.get_cmap('summer')
@@ -140,24 +140,24 @@ def get_e(S, J, starting_age, ending_age, bin_weights, omega_SS):
     '''
     emat_trunc = emat_basic[:50, :]
     cum_bins = 100 * np.array(bin_weights)
-    for j in xrange(J-1):
+    for j in range(J-1):
         cum_bins[j+1] += cum_bins[j]
     emat_collapsed = np.zeros((50, J))
-    for s in xrange(50):
-        for j in xrange(J):
+    for s in range(50):
+        for j in range(J):
             if j == 0:
                 emat_collapsed[s, j] = emat_trunc[s, :cum_bins[j]].mean()
             else:
                 emat_collapsed[s, j] = emat_trunc[
                     s, cum_bins[j-1]:cum_bins[j]].mean()
     e_fitted = np.zeros((50, J))
-    for j in xrange(J):
+    for j in range(J):
         func = poly.polyfit(
             np.arange(50)+starting_age, emat_collapsed[:50, j], deg=2)
 
         e_fitted[:, j] = poly.polyval(np.arange(50)+starting_age, func)
     emat_extended = exp_fit(e_fitted, S, J)
-    for j in xrange(1, J):
+    for j in range(1, J):
         emat_extended[:, j] = np.max(np.array(
             [emat_extended[:, j], emat_extended[:, j-1]]), axis=0)
     graph_income(S, J, emat_extended, starting_age, ending_age, bin_weights)

@@ -117,8 +117,8 @@ def run_micro_macro(user_params):
 
     ans = postprocess.create_diff(baseline_dir=BASELINE_DIR, policy_dir=REFORM_DIR)
 
-    print "total time was ", (time.time() - start_time)
-    print 'Percentage changes in aggregates:', ans
+    print("total time was ", (time.time() - start_time))
+    print('Percentage changes in aggregates:', ans)
 
     # return ans
 

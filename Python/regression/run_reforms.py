@@ -2,7 +2,7 @@
 '''
 
 '''
-from __future__ import print_function
+
 try:
     import traceback
     from multiprocessing import Process
@@ -151,7 +151,7 @@ def main():
         solution_checks = True
         run_micro = True
 
-    reform = {int(k):v for k,v in reforms[reform_num].items()}
+    reform = {int(k):v for k,v in list(reforms[reform_num].items())}
 
     ans = run_micro_macro(reform=reform, user_params={}, guid=guid,
                           solution_checks=solution_checks,
@@ -159,7 +159,7 @@ def main():
     as_percent = ans * 100
 
     # Dump a "pretty print" version of the answer provided to the web app
-    cols = list(map(str, range(2016, 2026))) + ["2016-2025"] + ["Steady State"]
+    cols = list(map(str, list(range(2016, 2026)))) + ["2016-2025"] + ["Steady State"]
     rows = ["GDP", "Consumption", "Investment", "Hours Worked", "Wages",
             "Interest Rates", "Total Taxes"]
     df = pd.DataFrame(data=ans, columns=cols, index=rows)

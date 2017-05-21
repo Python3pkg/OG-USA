@@ -27,7 +27,7 @@ This py-file creates the following other file(s):
 # Packages
 import numpy as np
 import scipy.optimize as opt
-import cPickle as pickle
+import pickle as pickle
 
 from . import tax
 from . import household
@@ -197,7 +197,7 @@ def SS_solver(b_guess_init, n_guess_init, wguess, rguess, T_Hguess,
     while (dist > mindist_SS) and (iteration < maxiter):
         # Solve for the steady state levels of b and n, given w, r, T_H and
         # factor
-        for j in xrange(J):
+        for j in range(J):
             # Solve the euler equations
             guesses = np.append(bssmat[:, j], nssmat[:, j])
             args_ = (r, w, T_H, factor, j, params, chi_b, chi_n, tau_bq, rho,
@@ -254,9 +254,9 @@ def SS_solver(b_guess_init, n_guess_init, wguess, rguess, T_Hguess,
         if iteration > 10:
             if dist_vec[iteration] - dist_vec[iteration - 1] > 0:
                 nu /= 2.0
-                print 'New value of nu:', nu
+                print('New value of nu:', nu)
         iteration += 1
-        print "Iteration: %02d" % iteration, " Distance: ", dist
+        print("Iteration: %02d" % iteration, " Distance: ", dist)
 
     eul_errors = np.ones(J)
     b_mat = np.zeros((S, J))
@@ -264,7 +264,7 @@ def SS_solver(b_guess_init, n_guess_init, wguess, rguess, T_Hguess,
     # Given the final w, r, T_H and factor, solve for the SS b and n (if you
     # don't do a final fsolve, there will be a slight mismatch,
     # with high euler errors)
-    for j in xrange(J):
+    for j in range(J):
         args_ = (r, w, T_H, factor, j, params, chi_b, chi_n, tau_bq, rho,
                  lambdas, weights, e)
         solutions1 = opt.fsolve(Euler_equation_solver, np.append(bssmat[:, j],
@@ -275,7 +275,7 @@ def SS_solver(b_guess_init, n_guess_init, wguess, rguess, T_Hguess,
         eul_errors[j] = np.array(eul_solve).max()
         b_mat[:, j] = solutions1[:S]
         n_mat[:, j] = solutions1[S:]
-    print 'SS fsolve euler error:', eul_errors.max()
+    print('SS fsolve euler error:', eul_errors.max())
     solutions = np.append(b_mat.flatten(), n_mat.flatten())
     other_vars = np.array([w, r, factor, T_H])
     solutions = np.append(solutions, other_vars)
@@ -343,7 +343,7 @@ def function_to_minimize(chi_params_scalars, chi_params_init, params,
     output = np.array(error5 + error6)
     # Constraints
     eul_error = np.ones(J)
-    for j in xrange(J):
+    for j in range(J):
         eul_error[j] = np.abs(Euler_equation_solver(np.append(b_new.reshape(S, J)[:, j], n_new.reshape(S, J)[:, j]), r_new, w_new,
                                                     T_H_new, factor_new, j, params, chi_params_init[:J], chi_params_init[J:], tau_bq, rho, lambdas, weights_SS, e)).max()
     fsolve_no_converg = eul_error.max()
@@ -370,7 +370,7 @@ def function_to_minimize(chi_params_scalars, chi_params_init, params,
     scaling_val = 100.0
     value = np.dot(scaling_val * np.dot(output.reshape(1, 2 * J + S),
                                         weighting_mat), scaling_val * output.reshape(2 * J + S, 1))
-    print 'Value of criterion function: ', value.sum()
+    print('Value of criterion function: ', value.sum())
     return value.sum()
 
 
@@ -416,8 +416,8 @@ def run_steady_state(ss_parameters, iterative_params, get_baseline=False, calibr
             chi_params_scalars = opt.minimize(function_to_minimize_X, chi_params_scalars,
                                               method='TNC', tol=MINIMIZER_TOL, bounds=bnds, options=MINIMIZER_OPTIONS).x
             chi_params *= chi_params_scalars
-            print 'The final scaling params', chi_params_scalars
-            print 'The final bequest parameter values:', chi_params
+            print('The final scaling params', chi_params_scalars)
+            print('The final bequest parameter values:', chi_params)
 
             solutions_dict = pickle.load(open(ss_init_path, "rb"))
             solutions = solutions_dict['solutions']
@@ -481,7 +481,7 @@ def run_steady_state(ss_parameters, iterative_params, get_baseline=False, calibr
 
     resource_constraint = Yss - (Css + Iss)
 
-    print 'Resource Constraint Difference:', resource_constraint
+    print('Resource Constraint Difference:', resource_constraint)
 
     household.constraint_checker_SS(bssmat, nssmat, cssmat, ss_parameters)
 
@@ -494,7 +494,7 @@ def run_steady_state(ss_parameters, iterative_params, get_baseline=False, calibr
     chi_n = np.array(chi_params[J:])
     euler_savings = np.zeros((S, J))
     euler_labor_leisure = np.zeros((S, J))
-    for j in xrange(J):
+    for j in range(J):
         euler_savings[:, j] = household.euler_savings_func(wss, rss, e[:, j], nssmat[:, j], b_s[:, j], b_splus1[:, j], b_splus2[
                                                            :, j], BQss[j], factor_ss, T_Hss, chi_b[:, j], ss_parameters, theta[j], tau_bq[j], rho, lambdas[j])
         euler_labor_leisure[:, j] = household.euler_labor_leisure_func(wss, rss, e[:, j], nssmat[:, j], b_s[

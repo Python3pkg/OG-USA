@@ -6,7 +6,7 @@ Functions for taxes in the steady state and along the transition path.
 
 # Packages
 import numpy as np
-import cPickle as pickle
+import pickle as pickle
 
 '''
 ------------------------------------------------------------------------
@@ -46,7 +46,7 @@ def replacement_rate_vals(nssmat, wss, factor_ss, params):
     AIME = highest_35_earn.sum(0) / ((12.0*(S/80.0))*equiv_35)
     PIA = np.zeros(dim2)
     # Bins from data for each level of replacement
-    for j in xrange(dim2):
+    for j in range(dim2):
         if AIME[j] < 749.0:
             PIA[j] = .9 * AIME[j]
         elif AIME[j] < 4517.0:
@@ -620,12 +620,12 @@ def revenue(r, w, b, n, BQ, Y, L, K, factor, params):
 
     if I.ndim == 2:
         T_I = np.zeros((S,J))
-        for j in xrange(J):
+        for j in range(J):
             TI_params = (e[:,j], etr_params)
             T_I[:,j] = tau_income(r, w, b[:,j], n[:,j], factor, TI_params) * I[:,j]
     if I.ndim == 3:
         T_I = np.zeros((T,S,J))
-        for j in xrange(J):
+        for j in range(J):
             if etr_params.ndim == 3:
                 tau_inc_params3D = etr_params[:,j,:]
             if etr_params.ndim == 4:
